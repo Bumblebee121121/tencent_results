@@ -1,0 +1,73 @@
+加载 indexer.pkl……
+
+================================================================================
+1. 顶层映射规模
+物品映射数量：4783154
+用户映射数量：1001845
+行为映射数量：2
+特征命名空间数量：22
+
+行为映射完整内容：
+原始行为 0 (int) -> 映射值 1
+原始行为 1 (int) -> 映射值 2
+
+================================================================================
+2. 所有特征命名空间
+特征 '100': type=dict, size=6
+特征 '101': type=dict, size=51
+特征 '102': type=dict, size=90709
+特征 '103': type=dict, size=86
+特征 '104': type=dict, size=2
+特征 '105': type=dict, size=7
+特征 '106': type=dict, size=14
+特征 '107': type=dict, size=19
+特征 '108': type=dict, size=4
+特征 '109': type=dict, size=3
+特征 '110': type=dict, size=2
+特征 '111': type=dict, size=4783154
+特征 '112': type=dict, size=30
+特征 '114': type=dict, size=20
+特征 '115': type=dict, size=691
+特征 '116': type=dict, size=18
+特征 '117': type=dict, size=497
+特征 '118': type=dict, size=1426
+特征 '119': type=dict, size=4191
+特征 '120': type=dict, size=3392
+特征 '121': type=dict, size=2135891
+特征 '122': type=dict, size=90919
+
+================================================================================
+3. candidate OID -> RID
+candidate.item_id：20000006363
+OID 类型：int
+映射后的 RID：15543
+是否成功映射：True
+
+================================================================================
+4. multimodal OID -> RID
+anonymous_cid 原始值：'20000000029'
+原始类型：str
+转换后的 OID：20000000029
+映射后的 RID：2014425
+是否成功映射：True
+多模态向量维度：32
+
+================================================================================
+5. seq 和 item_feat 使用的 ID
+seq 第一条物品 RID：2905777
+item_feat 第一条物品 RID：26
+
+================================================================================
+6. 映射样例
+item sample 1: OID=20004268480 -> RID=1
+item sample 2: OID=20002049346 -> RID=2
+item sample 3: OID=20001902532 -> RID=3
+item sample 4: OID=20004618112 -> RID=4
+item sample 5: OID=20002361362 -> RID=5
+user sample 1: raw='user_01343549' -> RID=1
+user sample 2: raw='user_00549312' -> RID=2
+user sample 3: raw='user_01006164' -> RID=3
+user sample 4: raw='user_01223457' -> RID=4
+user sample 5: raw='user_01348652' -> RID=5
+
+映射检查完成。

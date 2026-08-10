@@ -1,0 +1,62 @@
+文件路径：D:\AI-file\tecent\data\TencentGR-1M\indexer.pkl
+文件大小：141.89 MB
+开始加载 indexer.pkl……
+
+加载成功。
+================================================================================
+root: type=dict
+size=4
+key[0] = 'f' (str)
+    value[0]: type=defaultdict
+    size=22
+    key[0] = '101' (str)
+        value[0]: type=dict
+        size=51
+    key[1] = '111' (str)
+        value[1]: type=dict
+        size=4783154
+    key[2] = '102' (str)
+        value[2]: type=dict
+        size=90709
+    key[3] = '117' (str)
+        value[3]: type=dict
+        size=497
+    key[4] = '122' (str)
+        value[4]: type=dict
+        size=90919
+    ... 其余内容省略
+key[1] = 'i' (str)
+    value[1]: type=dict
+    size=4783154
+    key[0] = 20004268480 (int)
+        value[0]: type=int
+    key[1] = 20002049346 (int)
+        value[1]: type=int
+    key[2] = 20001902532 (int)
+        value[2]: type=int
+    key[3] = 20004618112 (int)
+        value[3]: type=int
+    key[4] = 20002361362 (int)
+        value[4]: type=int
+    ... 其余内容省略
+key[2] = 'u' (str)
+    value[2]: type=dict
+    size=1001845
+    key[0] = 'user_01343549' (str)
+        value[0]: type=int
+    key[1] = 'user_00549312' (str)
+        value[1]: type=int
+    key[2] = 'user_01006164' (str)
+        value[2]: type=int
+    key[3] = 'user_01223457' (str)
+        value[3]: type=int
+    key[4] = 'user_01348652' (str)
+        value[4]: type=int
+    ... 其余内容省略
+key[3] = 'a' (str)
+    value[3]: type=dict
+    size=2
+    key[0] = 0 (int)
+        value[0]: type=int
+    key[1] = 1 (int)
+        value[1]: type=int

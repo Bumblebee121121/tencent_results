@@ -1,0 +1,17 @@
+# 原始数据和大型映射
+data/
+*.pkl
+
+# Python 缓存
+**/__pycache__/
+*.py[cod]
+
+# 编辑器及下载缓存
+.vscode/
+.cache/
+
+# EDA 临时文件
+artifacts/eda/metrics/.*.tmp
+
+# 全量 item 聚合可能很大；GPT 通常只需汇总 CSV/JSON
+artifacts/eda/tables/*.parquet

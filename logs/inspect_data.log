@@ -1,0 +1,396 @@
+数据集根目录：D:\AI-file\tecent\data\TencentGR-1M
+
+================================================================================
+数据表：seq
+路径：D:\AI-file\tecent\data\TencentGR-1M\seq
+Parquet 文件数量：10
+
+Schema：
+user_id: int64
+seq: list<element: struct<item_id: int64, action_type: int32, timestamp: int64> not null>
+  child 0, element: struct<item_id: int64, action_type: int32, timestamp: int64> not null
+      child 0, item_id: int64
+      child 1, action_type: int32
+      child 2, timestamp: int64
+-- schema metadata --
+org.apache.spark.version: '3.3.1'
+org.apache.spark.sql.parquet.row.metadata: '{"type":"struct","fields":[{"' + 393
+
+前两条样例：
+
+样例 1：
+{
+  "user_id": 953188,
+  "seq": {
+    "length": 94,
+    "preview": [
+      {
+        "item_id": 2905777,
+        "action_type": 0,
+        "timestamp": 1745919240
+      },
+      {
+        "item_id": 728757,
+        "action_type": 0,
+        "timestamp": 1745919475
+      }
+    ]
+  }
+}
+
+样例 2：
+{
+  "user_id": 919490,
+  "seq": {
+    "length": 59,
+    "preview": [
+      {
+        "item_id": 2634013,
+        "action_type": 0,
+        "timestamp": 1729078089
+      },
+      {
+        "item_id": 1004660,
+        "action_type": 0,
+        "timestamp": 1729340807
+      }
+    ]
+  }
+}
+
+================================================================================
+数据表：item_feat
+路径：D:\AI-file\tecent\data\TencentGR-1M\item_feat
+Parquet 文件数量：10
+
+Schema：
+item_id: int64
+100: int64
+101: int64
+102: int64
+112: int64
+114: int64
+115: int64
+116: int64
+117: int64
+118: int64
+119: int64
+120: int64
+121: int64
+122: int64
+-- schema metadata --
+org.apache.spark.version: '3.3.1'
+org.apache.spark.sql.parquet.row.metadata: '{"type":"struct","fields":[{"' + 829
+
+前两条样例：
+
+样例 1：
+{
+  "item_id": 26,
+  "100": 4,
+  "101": 5,
+  "102": 81603,
+  "112": 14,
+  "114": 3,
+  "115": null,
+  "116": 8,
+  "117": 382,
+  "118": 692,
+  "119": 3077,
+  "120": 640,
+  "121": 2011258,
+  "122": 67985
+}
+
+样例 2：
+{
+  "item_id": 29,
+  "100": 4,
+  "101": 17,
+  "102": 28505,
+  "112": 29,
+  "114": 3,
+  "115": null,
+  "116": 12,
+  "117": 167,
+  "118": 464,
+  "119": 2099,
+  "120": 640,
+  "121": 1577026,
+  "122": 40945
+}
+
+================================================================================
+数据表：user_feat
+路径：D:\AI-file\tecent\data\TencentGR-1M\user_feat
+Parquet 文件数量：10
+
+Schema：
+user_id: int64
+103: int64
+104: int64
+105: int64
+106: list<element: int64>
+  child 0, element: int64
+107: list<element: int64>
+  child 0, element: int64
+108: list<element: int64>
+  child 0, element: int64
+109: int64
+110: list<element: int64>
+  child 0, element: int64
+-- schema metadata --
+org.apache.spark.version: '3.3.1'
+org.apache.spark.sql.parquet.row.metadata: '{"type":"struct","fields":[{"' + 738
+
+前两条样例：
+
+样例 1：
+{
+  "user_id": 19,
+  "103": 36,
+  "104": 2,
+  "105": 7,
+  "106": {
+    "length": 1,
+    "preview": [
+      6
+    ]
+  },
+  "107": {
+    "length": 1,
+    "preview": [
+      15
+    ]
+  },
+  "108": null,
+  "109": 2,
+  "110": null
+}
+
+样例 2：
+{
+  "user_id": 26,
+  "103": 22,
+  "104": 1,
+  "105": 3,
+  "106": null,
+  "107": null,
+  "108": null,
+  "109": 1,
+  "110": null
+}
+
+================================================================================
+数据表：candidate
+路径：D:\AI-file\tecent\data\TencentGR-1M\candidate
+Parquet 文件数量：1
+
+Schema：
+item_id: int64
+retrieval_id: int32
+100: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+101: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+102: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+112: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+114: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+115: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+116: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+117: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+118: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+119: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+120: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+121: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+122: struct<cold_start: int64, feature_value: string>
+  child 0, cold_start: int64
+  child 1, feature_value: string
+
+前两条样例：
+
+样例 1：
+{
+  "item_id": 20000006363,
+  "retrieval_id": 0,
+  "100": {
+    "cold_start": 0,
+    "feature_value": "6"
+  },
+  "101": {
+    "cold_start": 0,
+    "feature_value": "42"
+  },
+  "102": {
+    "cold_start": 0,
+    "feature_value": "63599"
+  },
+  "112": {
+    "cold_start": 0,
+    "feature_value": "29"
+  },
+  "114": {
+    "cold_start": 0,
+    "feature_value": "3"
+  },
+  "115": {
+    "cold_start": null,
+    "feature_value": null
+  },
+  "116": {
+    "cold_start": 0,
+    "feature_value": "7"
+  },
+  "117": {
+    "cold_start": 0,
+    "feature_value": "389"
+  },
+  "118": {
+    "cold_start": 0,
+    "feature_value": "572"
+  },
+  "119": {
+    "cold_start": 0,
+    "feature_value": "667"
+  },
+  "120": {
+    "cold_start": 0,
+    "feature_value": "621"
+  },
+  "121": {
+    "cold_start": 0,
+    "feature_value": "794587"
+  },
+  "122": {
+    "cold_start": 0,
+    "feature_value": "28134"
+  }
+}
+
+样例 2：
+{
+  "item_id": 20000016200,
+  "retrieval_id": 1,
+  "100": {
+    "cold_start": 0,
+    "feature_value": "6"
+  },
+  "101": {
+    "cold_start": 0,
+    "feature_value": "22"
+  },
+  "102": {
+    "cold_start": 0,
+    "feature_value": "46781"
+  },
+  "112": {
+    "cold_start": 0,
+    "feature_value": "29"
+  },
+  "114": {
+    "cold_start": 0,
+    "feature_value": "3"
+  },
+  "115": {
+    "cold_start": 0,
+    "feature_value": "368"
+  },
+  "116": {
+    "cold_start": 0,
+    "feature_value": "2"
+  },
+  "117": {
+    "cold_start": 0,
+    "feature_value": "201"
+  },
+  "118": {
+    "cold_start": 0,
+    "feature_value": "107"
+  },
+  "119": {
+    "cold_start": 0,
+    "feature_value": "3116"
+  },
+  "120": {
+    "cold_start": 0,
+    "feature_value": "1124"
+  },
+  "121": {
+    "cold_start": 0,
+    "feature_value": "1821550"
+  },
+  "122": {
+    "cold_start": 0,
+    "feature_value": "80452"
+  }
+}
+
+================================================================================
+数据表：mm_emb_81_32
+路径：D:\AI-file\tecent\data\TencentGR-1M\mm_emb\emb_81_32_parquet
+Parquet 文件数量：5
+
+Schema：
+anonymous_cid: string
+emb: list<element: double>
+  child 0, element: double
+-- schema metadata --
+org.apache.spark.version: '3.3.1'
+org.apache.spark.sql.parquet.row.metadata: '{"type":"struct","fields":[{"' + 182
+
+前两条样例：
+
+样例 1：
+{
+  "anonymous_cid": "20000000029",
+  "emb": {
+    "length": 32,
+    "preview": [
+      0.15403945744037628,
+      -0.21125970780849457
+    ]
+  }
+}
+
+样例 2：
+{
+  "anonymous_cid": "20000000061",
+  "emb": {
+    "length": 32,
+    "preview": [
+      0.21836023032665253,
+      -0.10021976381540298
+    ]
+  }
+}
+
+================================================================================
+文件：indexer.pkl
+路径：D:\AI-file\tecent\data\TencentGR-1M\indexer.pkl
+状态：存在
+文件大小：141.89 MB
+
+================================================================================
+数据结构检查完成。

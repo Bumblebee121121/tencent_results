@@ -1,0 +1,121 @@
+{
+  "stage": "2.1",
+  "input": "data\\TencentGR-1M\\seq",
+  "user_count": 1001845,
+  "event_count": 90223574,
+  "sequence_length": {
+    "count": 1001845,
+    "mean": 90.05741806367253,
+    "min": 10.0,
+    "p25": 87.0,
+    "p50": 95.0,
+    "p75": 98.0,
+    "p90": 100.0,
+    "p95": 100.0,
+    "p99": 100.0,
+    "max": 100.0
+  },
+  "length_100": {
+    "user_count": 132813,
+    "user_ratio": 0.1325684112811862
+  },
+  "length_bands": [
+    {
+      "length_band": "1-10",
+      "user_count": 517,
+      "user_ratio": 0.0005160478916399244
+    },
+    {
+      "length_band": "11-20",
+      "user_count": 4963,
+      "user_ratio": 0.004953860128063723
+    },
+    {
+      "length_band": "21-50",
+      "user_count": 19804,
+      "user_ratio": 0.019767528909162595
+    },
+    {
+      "length_band": "51-80",
+      "user_count": 121201,
+      "user_ratio": 0.12097779596644191
+    },
+    {
+      "length_band": "81-99",
+      "user_count": 722547,
+      "user_ratio": 0.7212163558235056
+    },
+    {
+      "length_band": "100",
+      "user_count": 132813,
+      "user_ratio": 0.1325684112811862
+    }
+  ],
+  "action_composition": [
+    {
+      "action_group": "exposure_action_0",
+      "event_count": 80656635,
+      "event_ratio": 0.8939640874789553
+    },
+    {
+      "action_group": "click_action_1",
+      "event_count": 8776358,
+      "event_ratio": 0.09727344651631735
+    },
+    {
+      "action_group": "unknown_action_null",
+      "event_count": 790581,
+      "event_ratio": 0.008762466004727323
+    }
+  ],
+  "per_user": {
+    "click_event_ratio_definition": "click_count / (exposure_count + click_count)",
+    "click_event_ratio": {
+      "count": 1001845,
+      "mean": 0.09720038087245844,
+      "min": 0.0,
+      "p25": 0.05102040816326531,
+      "p50": 0.08333333333333333,
+      "p75": 0.12790697674418605,
+      "p90": 0.18085106382978725,
+      "p95": 0.22,
+      "p99": 0.3229166666666667,
+      "max": 1.0
+    },
+    "undefined_click_event_ratio_user_count": 0,
+    "unknown_ratio": {
+      "count": 1001845,
+      "mean": 0.008505756557013681,
+      "min": 0.0,
+      "p25": 0.0,
+      "p50": 0.0,
+      "p75": 0.010526315789473684,
+      "p90": 0.024390243902439025,
+      "p95": 0.04040404040404041,
+      "p99": 0.08602150537634409,
+      "max": 0.673469387755102
+    },
+    "click_count_groups": [
+      {
+        "click_group": "click_count_0",
+        "user_count": 17131,
+        "user_ratio": 0.017099451511960434
+      },
+      {
+        "click_group": "click_count_1",
+        "user_count": 37819,
+        "user_ratio": 0.037749352444739454
+      },
+      {
+        "click_group": "click_count_ge_2",
+        "user_count": 946895,
+        "user_ratio": 0.9451511960433001
+      }
+    ]
+  },
+  "interpretation_guardrails": [
+    "click_event_ratio is not labeled CTR",
+    "null action_type is not merged into exposure",
+    "length=100 concentration is evidence of a ceiling, not proof of a hidden construction rule"
+  ]
+}
