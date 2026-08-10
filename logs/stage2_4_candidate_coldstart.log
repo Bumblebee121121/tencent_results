@@ -1,0 +1,18 @@
+阶段 2.4：候选池、历史未见广告与 cold_start
+candidate 路径：D:\AI-file\tecent\data\TencentGR-1M\candidate
+加载 indexer.pkl 的 item OID -> RID 映射……
+历史 item 映射数：4,783,154
+已处理 10 个多模态批次，累计记录：655,360
+已处理 20 个多模态批次，累计记录：1,261,855
+已处理 30 个多模态批次，累计记录：1,870,330
+已处理 40 个多模态批次，累计记录：2,462,008
+已处理 50 个多模态批次，累计记录：3,063,568
+已处理 60 个多模态批次，累计记录：3,672,043
+已处理 70 个多模态批次，累计记录：4,291,316
+candidate 匿名 struct 字段数：13
+Traceback (most recent call last):
+  File "D:\AI-file\tecent\scripts\eda\stage2_4_candidate_coldstart.py", line 289, in <module>
+    main()
+  File "D:\AI-file\tecent\scripts\eda\stage2_4_candidate_coldstart.py", line 125, in main
+    cold_values[parent_null] = NULL_SENTINEL
+ValueError: assignment destination is read-only

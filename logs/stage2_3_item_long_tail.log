@@ -6,11 +6,15 @@
 已处理 80 个批次，累计用户数：631,127，累计行为数：56,842,034
 已处理 100 个批次，累计用户数：787,613，累计行为数：70,929,816
 已处理 120 个批次，累计用户数：943,652，累计行为数：84,985,024
-Traceback (most recent call last):
-  File "D:\AI-file\tecent\scripts\eda\stage2_3_item_long_tail.py", line 287, in <module>
-    main()
-  File "D:\AI-file\tecent\scripts\eda\stage2_3_item_long_tail.py", line 240, in main
-    sample_indices = np.unique(np.geomspace(0, ranks.size - 1, 100_000).astype(np.int64))
-  File "D:\Anaconda\envs\tencent_rec\lib\site-packages\numpy\_core\function_base.py", line 413, in geomspace
-    raise ValueError('Geometric sequence cannot include zero')
-ValueError: Geometric sequence cannot include zero
+
+========================================================================
+阶段 2.3 完成
+关键输出文件：
+- D:\AI-file\tecent\artifacts\eda\metrics\stage2_3_item_long_tail.json
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_3_item_popularity_bands.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_3_top_item_contribution.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_3_head_mid_tail_summary.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_3_item_popularity.parquet
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_3_item_popularity_loglog.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_3_item_popularity_cdf.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_3_head_tail_contribution.png

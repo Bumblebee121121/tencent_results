@@ -237,7 +237,13 @@ def main() -> None:
     ]
     ranks = np.arange(1, sorted_desc.size + 1)
     if ranks.size > 100_000:
-        sample_indices = np.unique(np.geomspace(0, ranks.size - 1, 100_000).astype(np.int64))
+        sample_indices = np.unique(
+    np.geomspace(
+        1,
+        ranks.size,
+        100_000,
+    ).astype(np.int64) - 1
+)
     else:
         sample_indices = np.arange(ranks.size)
     plt.figure(figsize=(8, 5))
