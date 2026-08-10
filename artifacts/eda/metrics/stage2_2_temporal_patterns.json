@@ -1,0 +1,88 @@
+{
+  "stage": "2.2",
+  "user_count": 1001845,
+  "event_count": 90223574,
+  "history_span_seconds": {
+    "count": 1001845,
+    "mean": 3304291.470072716,
+    "min": 5114.0,
+    "p25": 1576393.0,
+    "p50": 2308576.0,
+    "p75": 3590391.0,
+    "p90": 6442507.199999996,
+    "p95": 9796792.599999994,
+    "p99": 17883290.559999984,
+    "max": 19794376.0
+  },
+  "history_span_days": {
+    "count": 1001845,
+    "mean": 38.24411423695273,
+    "min": 0.05918981481481481,
+    "p25": 18.245289351851852,
+    "p50": 26.71962962962963,
+    "p75": 41.55545138888889,
+    "p90": 74.56605555555551,
+    "p95": 113.38880324074067,
+    "p99": 206.98252962962945,
+    "max": 229.10157407407408
+  },
+  "delta_t_seconds": {
+    "count": 89221729,
+    "mean": null,
+    "min": 0.0,
+    "p25": 732.0,
+    "p50": 6449.0,
+    "p75": 42078.0,
+    "p90": 86267.0,
+    "p95": 140454.0,
+    "p99": 366449.0,
+    "max": 17796030.0
+  },
+  "delta_t_zero": {
+    "count": 268573,
+    "ratio": 0.003010174797217839
+  },
+  "delta_t_bands": [
+    {
+      "gap_band": "0_seconds",
+      "gap_count": 268573,
+      "gap_ratio": 0.003010174797217839
+    },
+    {
+      "gap_band": "1_to_59_seconds",
+      "gap_count": 2090643,
+      "gap_ratio": 0.02343199379155721
+    },
+    {
+      "gap_band": "1_to_59_minutes",
+      "gap_count": 36585776,
+      "gap_ratio": 0.4100545507249697
+    },
+    {
+      "gap_band": "1_to_23_hours",
+      "gap_count": 41397179,
+      "gap_ratio": 0.4639809098521281
+    },
+    {
+      "gap_band": "1_to_6_days",
+      "gap_count": 8518341,
+      "gap_ratio": 0.09547383911378808
+    },
+    {
+      "gap_band": "7_to_29_days",
+      "gap_count": 329986,
+      "gap_ratio": 0.0036984936707514376
+    },
+    {
+      "gap_band": "30_days_or_more",
+      "gap_count": 31231,
+      "gap_ratio": 0.00035003804958767386
+    }
+  ],
+  "extreme_gap_counts": {
+    "at_least_7_days": 361217,
+    "at_least_30_days": 31231
+  },
+  "negative_gap_count": 0,
+  "interpretation_guardrail": "Temporal association only; no label construction or model-effect claim."
+}

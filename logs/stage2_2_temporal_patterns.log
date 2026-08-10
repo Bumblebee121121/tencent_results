@@ -1,0 +1,17 @@
+阶段 2.2：时间行为模式
+输入路径：D:\AI-file\tecent\data\TencentGR-1M\seq
+已处理 20 个批次，累计用户数：157,358，累计行为数：14,181,228，累计相邻间隔：14,023,870
+已处理 40 个批次，累计用户数：312,979，累计行为数：28,191,613，累计相邻间隔：27,878,634
+已处理 60 个批次，累计用户数：470,333，累计行为数：42,362,526，累计相邻间隔：41,892,193
+已处理 80 个批次，累计用户数：631,127，累计行为数：56,842,034，累计相邻间隔：56,210,907
+已处理 100 个批次，累计用户数：787,613，累计行为数：70,929,816，累计相邻间隔：70,142,203
+已处理 120 个批次，累计用户数：943,652，累计行为数：84,985,024，累计相邻间隔：84,041,372
+
+========================================================================
+阶段 2.2 完成
+关键输出文件：
+- D:\AI-file\tecent\artifacts\eda\metrics\stage2_2_temporal_patterns.json
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_2_event_time_gap_bands.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_2_temporal_quantiles.csv
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_2_history_span_distribution.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_2_event_time_gap_distribution.png
