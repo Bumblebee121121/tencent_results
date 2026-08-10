@@ -1,0 +1,138 @@
+{
+  "stage": "2.3",
+  "user_count": 1001845,
+  "historical_item_count": 4783154,
+  "event_count": 90223574,
+  "item_total_event_count": {
+    "count": 4783154,
+    "mean": 18.862778409392632,
+    "min": 1.0,
+    "p25": 1.0,
+    "p50": 2.0,
+    "p75": 6.0,
+    "p90": 23.0,
+    "p95": 54.0,
+    "p99": 289.0,
+    "max": 65070.0
+  },
+  "item_exposure_count": {
+    "count": 4783154,
+    "mean": 16.862646488070425,
+    "min": 0.0,
+    "p25": 1.0,
+    "p50": 2.0,
+    "p75": 5.0,
+    "p90": 20.0,
+    "p95": 48.0,
+    "p99": 259.0,
+    "max": 56957.0
+  },
+  "item_click_count": {
+    "count": 4783154,
+    "mean": 1.8348474667551995,
+    "min": 0.0,
+    "p25": 0.0,
+    "p50": 0.0,
+    "p75": 1.0,
+    "p90": 2.0,
+    "p95": 5.0,
+    "p99": 27.0,
+    "max": 20366.0
+  },
+  "item_unknown_count": {
+    "count": 4783154,
+    "mean": 0.16528445456700747,
+    "min": 0.0,
+    "p25": 0.0,
+    "p50": 0.0,
+    "p75": 0.0,
+    "p90": 0.0,
+    "p95": 1.0,
+    "p99": 3.0,
+    "max": 2937.0
+  },
+  "popularity_bands": [
+    {
+      "event_count_band": "1",
+      "item_count": 2059938,
+      "item_ratio": 0.4306652054272139
+    },
+    {
+      "event_count_band": "2-5",
+      "item_count": 1443666,
+      "item_ratio": 0.3018230230513172
+    },
+    {
+      "event_count_band": "6-10",
+      "item_count": 444236,
+      "item_ratio": 0.09287511963863175
+    },
+    {
+      "event_count_band": "11-100",
+      "item_count": 697553,
+      "item_ratio": 0.14583536302615388
+    },
+    {
+      "event_count_band": ">100",
+      "item_count": 137761,
+      "item_ratio": 0.028801288856683267
+    }
+  ],
+  "top_item_contribution": [
+    {
+      "top_item_fraction": 0.01,
+      "top_item_count": 47832,
+      "event_count": 44504263,
+      "event_ratio": 0.49326646049290845
+    },
+    {
+      "top_item_fraction": 0.05,
+      "top_item_count": 239158,
+      "event_count": 66775686,
+      "event_ratio": 0.7401135095801016
+    },
+    {
+      "top_item_fraction": 0.1,
+      "top_item_count": 478316,
+      "event_count": 75061242,
+      "event_ratio": 0.8319471139549405
+    },
+    {
+      "top_item_fraction": 0.2,
+      "top_item_count": 956631,
+      "event_count": 81699466,
+      "event_ratio": 0.9055223859786357
+    }
+  ],
+  "group_definition": {
+    "tail": "total_event_count <= p50",
+    "mid": "p50 < total_event_count <= p90",
+    "head": "total_event_count > p90",
+    "p50_threshold": 2.0,
+    "p90_threshold": 23.0
+  },
+  "group_summary": [
+    {
+      "popularity_group": "tail",
+      "item_count": 2734137,
+      "item_ratio": 0.571618016062205,
+      "event_count": 3408336,
+      "event_ratio": 0.03777655715567198
+    },
+    {
+      "popularity_group": "mid",
+      "item_count": 1583025,
+      "item_ratio": 0.3309584010884868,
+      "event_count": 12037448,
+      "event_ratio": 0.13341799117822578
+    },
+    {
+      "popularity_group": "head",
+      "item_count": 465992,
+      "item_ratio": 0.09742358284930822,
+      "event_count": 74777790,
+      "event_ratio": 0.8288054516661022
+    }
+  ],
+  "unique_user_count_note": "Not computed because exact item-user pairs would add substantial memory cost."
+}
