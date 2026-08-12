@@ -1,0 +1,9 @@
+﻿table,feature,dtype,row_count,null_count,non_null_count,non_null_ratio,unique_count,unique_count_definition,list_length_min,list_length_median,list_length_p90,list_length_p99,list_length_max,empty_list_count,empty_list_ratio
+user_feat,103,int64,1001845,881,1000964,0.9991206224515768,86,distinct non-null scalar values,,,,,,,
+user_feat,104,int64,1001845,3802,998043,0.9962050017717311,2,distinct non-null scalar values,,,,,,,
+user_feat,105,int64,1001845,142243,859602,0.8580189550279734,7,distinct non-null scalar values,,,,,,,
+user_feat,106,list<element: int64>,1001845,121091,880754,0.8791320014573113,14,distinct non-null list elements,1.0,1.0,4.0,6.0,8.0,0.0,0.0
+user_feat,107,list<element: int64>,1001845,614159,387686,0.38697203659248686,19,distinct non-null list elements,1.0,1.0,1.0,1.0,1.0,0.0,0.0
+user_feat,108,list<element: int64>,1001845,831167,170678,0.17036367901222246,4,distinct non-null list elements,1.0,1.0,1.0,1.0,2.0,0.0,0.0
+user_feat,109,int64,1001845,378,1001467,0.9996226961256481,3,distinct non-null scalar values,,,,,,,
+user_feat,110,list<element: int64>,1001845,571247,430598,0.4298050097569983,2,distinct non-null list elements,1.0,2.0,2.0,2.0,2.0,0.0,0.0

@@ -1,0 +1,113 @@
+阶段 2.6：匿名用户/广告特征 Profile
+
+分析 user_feat：D:\AI-file\tecent\data\TencentGR-1M\user_feat
+  字段 103：已读取 20 个批次
+完成字段 1/8：103
+  字段 104：已读取 20 个批次
+完成字段 2/8：104
+  字段 105：已读取 20 个批次
+完成字段 3/8：105
+  字段 106：已读取 20 个批次
+完成字段 4/8：106
+  字段 107：已读取 20 个批次
+完成字段 5/8：107
+  字段 108：已读取 20 个批次
+完成字段 6/8：108
+  字段 109：已读取 20 个批次
+完成字段 7/8：109
+  字段 110：已读取 20 个批次
+完成字段 8/8：110
+
+分析 item_feat：D:\AI-file\tecent\data\TencentGR-1M\item_feat
+  字段 100：已读取 20 个批次
+  字段 100：已读取 40 个批次
+  字段 100：已读取 60 个批次
+  字段 100：已读取 80 个批次
+完成字段 1/13：100
+  字段 101：已读取 20 个批次
+  字段 101：已读取 40 个批次
+  字段 101：已读取 60 个批次
+  字段 101：已读取 80 个批次
+完成字段 2/13：101
+  字段 102：已读取 20 个批次
+  字段 102：已读取 40 个批次
+  字段 102：已读取 60 个批次
+  字段 102：已读取 80 个批次
+完成字段 3/13：102
+  字段 112：已读取 20 个批次
+  字段 112：已读取 40 个批次
+  字段 112：已读取 60 个批次
+  字段 112：已读取 80 个批次
+完成字段 4/13：112
+  字段 114：已读取 20 个批次
+  字段 114：已读取 40 个批次
+  字段 114：已读取 60 个批次
+  字段 114：已读取 80 个批次
+完成字段 5/13：114
+  字段 115：已读取 20 个批次
+  字段 115：已读取 40 个批次
+  字段 115：已读取 60 个批次
+  字段 115：已读取 80 个批次
+完成字段 6/13：115
+  字段 116：已读取 20 个批次
+  字段 116：已读取 40 个批次
+  字段 116：已读取 60 个批次
+  字段 116：已读取 80 个批次
+完成字段 7/13：116
+  字段 117：已读取 20 个批次
+  字段 117：已读取 40 个批次
+  字段 117：已读取 60 个批次
+  字段 117：已读取 80 个批次
+完成字段 8/13：117
+  字段 118：已读取 20 个批次
+  字段 118：已读取 40 个批次
+  字段 118：已读取 60 个批次
+  字段 118：已读取 80 个批次
+完成字段 9/13：118
+  字段 119：已读取 20 个批次
+  字段 119：已读取 40 个批次
+  字段 119：已读取 60 个批次
+  字段 119：已读取 80 个批次
+完成字段 10/13：119
+  字段 120：已读取 20 个批次
+  字段 120：已读取 40 个批次
+  字段 120：已读取 60 个批次
+  字段 120：已读取 80 个批次
+完成字段 11/13：120
+  字段 121：已读取 20 个批次
+  字段 121：已读取 40 个批次
+  字段 121：已读取 60 个批次
+  字段 121：已读取 80 个批次
+完成字段 12/13：121
+  字段 122：已读取 20 个批次
+  字段 122：已读取 40 个批次
+  字段 122：已读取 60 个批次
+  字段 122：已读取 80 个批次
+完成字段 13/13：122
+
+分析 candidate：D:\AI-file\tecent\data\TencentGR-1M\candidate
+完成 candidate 字段 1/13：100
+完成 candidate 字段 2/13：101
+完成 candidate 字段 3/13：102
+完成 candidate 字段 4/13：112
+完成 candidate 字段 5/13：114
+完成 candidate 字段 6/13：115
+完成 candidate 字段 7/13：116
+完成 candidate 字段 8/13：117
+完成 candidate 字段 9/13：118
+完成 candidate 字段 10/13：119
+完成 candidate 字段 11/13：120
+完成 candidate 字段 12/13：121
+完成 candidate 字段 13/13：122
+
+========================================================================
+阶段 2.6 完成
+关键输出文件：
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_6_user_feature_profile.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_6_item_feature_profile.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_6_candidate_feature_profile.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_6_candidate_cold_start_distribution.csv
+- D:\AI-file\tecent\artifacts\eda\metrics\stage2_6_feature_profile.json
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_6_user_feature_non_null_ratio.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_6_item_feature_non_null_ratio.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_6_candidate_feature_non_null_ratio.png

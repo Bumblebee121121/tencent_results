@@ -1,0 +1,21 @@
+{
+  "stage": "2.6",
+  "user_feature_count": 8,
+  "item_feature_count": 13,
+  "candidate_feature_count": 13,
+  "profile_tables": [
+    "D:\\AI-file\\tecent\\artifacts\\eda\\tables\\stage2_6_user_feature_profile.csv",
+    "D:\\AI-file\\tecent\\artifacts\\eda\\tables\\stage2_6_item_feature_profile.csv",
+    "D:\\AI-file\\tecent\\artifacts\\eda\\tables\\stage2_6_candidate_feature_profile.csv"
+  ],
+  "unique_count_policy": {
+    "scalar": "distinct non-null scalar values",
+    "list": "distinct non-null elements after flattening",
+    "candidate": "distinct non-null feature_value strings"
+  },
+  "interpretation_guardrails": [
+    "Anonymous features are not assigned business semantics.",
+    "High cardinality alone does not imply hashing.",
+    "Embedding dimensions are not selected in stage 2."
+  ]
+}
