@@ -1,0 +1,25 @@
+阶段 2.5：多模态覆盖与缺失模式
+加载 indexer.pkl 的 item OID -> RID 映射……
+历史 item 映射数：4,783,154
+已处理 10 个多模态批次，累计记录：655,360
+已处理 20 个多模态批次，累计记录：1,261,855
+已处理 30 个多模态批次，累计记录：1,870,330
+已处理 40 个多模态批次，累计记录：2,462,008
+已处理 50 个多模态批次，累计记录：3,063,568
+已处理 60 个多模态批次，累计记录：3,672,043
+已处理 70 个多模态批次，累计记录：4,291,316
+已对齐 1,000,000 个历史 OID -> RID
+已对齐 2,000,000 个历史 OID -> RID
+已对齐 3,000,000 个历史 OID -> RID
+已对齐 4,000,000 个历史 OID -> RID
+已处理 5 个 candidate 批次
+已处理 10 个 candidate 批次
+
+========================================================================
+阶段 2.5 完成
+关键输出文件：
+- D:\AI-file\tecent\artifacts\eda\metrics\stage2_5_multimodal_coverage.json
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_5_mm_coverage_by_group.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_5_candidate_mm_coverage.csv
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_5_mm_coverage_by_popularity.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_5_candidate_mm_coverage.png

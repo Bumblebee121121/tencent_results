@@ -63,11 +63,20 @@ def require_columns(dataset: ds.Dataset, required: Sequence[str]) -> None:
 
 def to_numpy_int(array: pa.Array, fill_value: int = -1) -> np.ndarray:
     """将 Arrow 整数数组转成 int64，并显式填充空值。"""
-    return (
-        pc.fill_null(array, fill_value)
-        .to_numpy(zero_copy_only=False)
-        .astype(np.int64, copy=False)
-    )
+    # 对无空值列直接转换，避免在 uint64 等无符号类型上构造
+    # pa.scalar(-1, type=uint64) 引发 OverflowError。
+    if array.null_count == 0:
+        values = array.to_numpy(zero_copy_only=False)
+    else:
+        values_to_fill = array
+        if pa.types.is_unsigned_integer(array.type) and fill_value < 0:
+            # 负数哨兵无法直接填入无符号 Arrow 数组；先安全转成 int64。
+            values_to_fill = pc.cast(array, pa.int64(), safe=True)
+        values = pc.fill_null(values_to_fill, fill_value).to_numpy(
+            zero_copy_only=False
+        )
+
+    return values.astype(np.int64, copy=False)
 
 
 def local_list_offsets(array: pa.Array) -> tuple[np.ndarray, np.ndarray]:

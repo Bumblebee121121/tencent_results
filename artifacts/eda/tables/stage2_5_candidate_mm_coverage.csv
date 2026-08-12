@@ -1,0 +1,4 @@
+﻿group_type,group_name,item_count,mm_id_covered_count,mm_id_coverage_ratio,valid_mm_count,valid_mm_ratio,missing_mm_count,missing_mm_ratio
+candidate_visibility,all,660000,,,635719,0.963210606060606,24281,0.03678939393939394
+candidate_visibility,seen,511029,,,490874,0.9605599682209816,20155,0.03944003177901841
+candidate_visibility,unseen,148971,,,144845,0.9723033342059864,4126,0.0276966657940136

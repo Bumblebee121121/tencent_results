@@ -1,0 +1,98 @@
+{
+  "stage": "2.5",
+  "popularity_thresholds": {
+    "p50": 2.0,
+    "p90": 23.0
+  },
+  "coverage_by_group": [
+    {
+      "group_type": "history_popularity",
+      "group_name": "all",
+      "item_count": 4783154,
+      "mm_id_covered_count": 4595474,
+      "mm_id_coverage_ratio": 0.9607622919939437,
+      "valid_mm_count": 4588438,
+      "valid_mm_ratio": 0.9592912960778599,
+      "missing_mm_count": 194716,
+      "missing_mm_ratio": 0.04070870392214008
+    },
+    {
+      "group_type": "history_popularity",
+      "group_name": "tail",
+      "item_count": 2734137,
+      "mm_id_covered_count": 2659293,
+      "mm_id_coverage_ratio": 0.9726260973755155,
+      "valid_mm_count": 2654751,
+      "valid_mm_ratio": 0.9709648784973102,
+      "missing_mm_count": 79386,
+      "missing_mm_ratio": 0.02903512150268988
+    },
+    {
+      "group_type": "history_popularity",
+      "group_name": "mid",
+      "item_count": 1583025,
+      "mm_id_covered_count": 1498906,
+      "mm_id_coverage_ratio": 0.9468618625732379,
+      "valid_mm_count": 1496814,
+      "valid_mm_ratio": 0.945540342066613,
+      "missing_mm_count": 86211,
+      "missing_mm_ratio": 0.05445965793338703
+    },
+    {
+      "group_type": "history_popularity",
+      "group_name": "head",
+      "item_count": 465992,
+      "mm_id_covered_count": 437275,
+      "mm_id_coverage_ratio": 0.9383744785318203,
+      "valid_mm_count": 436873,
+      "valid_mm_ratio": 0.93751180277773,
+      "missing_mm_count": 29119,
+      "missing_mm_ratio": 0.06248819722226991
+    },
+    {
+      "group_type": "candidate_visibility",
+      "group_name": "all",
+      "item_count": 660000,
+      "mm_id_covered_count": null,
+      "mm_id_coverage_ratio": null,
+      "valid_mm_count": 635719,
+      "valid_mm_ratio": 0.963210606060606,
+      "missing_mm_count": 24281,
+      "missing_mm_ratio": 0.03678939393939394
+    },
+    {
+      "group_type": "candidate_visibility",
+      "group_name": "seen",
+      "item_count": 511029,
+      "mm_id_covered_count": null,
+      "mm_id_coverage_ratio": null,
+      "valid_mm_count": 490874,
+      "valid_mm_ratio": 0.9605599682209816,
+      "missing_mm_count": 20155,
+      "missing_mm_ratio": 0.03944003177901841
+    },
+    {
+      "group_type": "candidate_visibility",
+      "group_name": "unseen",
+      "item_count": 148971,
+      "mm_id_covered_count": null,
+      "mm_id_coverage_ratio": null,
+      "valid_mm_count": 144845,
+      "valid_mm_ratio": 0.9723033342059864,
+      "missing_mm_count": 4126,
+      "missing_mm_ratio": 0.0276966657940136
+    }
+  ],
+  "coverage_difference_percentage_points": {
+    "history_head_mid_tail_max_minus_min": 3.3453075719580116,
+    "candidate_seen_minus_unseen": -1.1743365985004806
+  },
+  "mm_scan_audit": {
+    "row_count": 4742961,
+    "invalid_oid_count": 0,
+    "null_embedding_count": 9678,
+    "wrong_dimension_count": 0,
+    "valid_embedding_count": 4733283
+  },
+  "interpretation_guardrail": "Report effect-size differences in coverage; do not call them causal or model improvements."
+}
