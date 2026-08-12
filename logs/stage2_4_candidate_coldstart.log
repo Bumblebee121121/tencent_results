@@ -10,9 +10,16 @@ candidate 路径：D:\AI-file\tecent\data\TencentGR-1M\candidate
 已处理 60 个多模态批次，累计记录：3,672,043
 已处理 70 个多模态批次，累计记录：4,291,316
 candidate 匿名 struct 字段数：13
-Traceback (most recent call last):
-  File "D:\AI-file\tecent\scripts\eda\stage2_4_candidate_coldstart.py", line 289, in <module>
-    main()
-  File "D:\AI-file\tecent\scripts\eda\stage2_4_candidate_coldstart.py", line 125, in main
-    cold_values[parent_null] = NULL_SENTINEL
-ValueError: assignment destination is read-only
+已处理 5 个 candidate 批次，累计候选数：327,680
+已处理 10 个 candidate 批次，累计候选数：655,360
+
+========================================================================
+阶段 2.4 完成
+关键输出文件：
+- D:\AI-file\tecent\artifacts\eda\metrics\stage2_4_candidate_coldstart.json
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_4_candidate_seen_mm_matrix.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_4_cold_start_by_field_seen.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_4_feature_availability_by_field_seen.csv
+- D:\AI-file\tecent\artifacts\eda\tables\stage2_4_available_feature_count_distribution.csv
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_4_candidate_seen_mm_matrix.png
+- D:\AI-file\tecent\artifacts\eda\figures\stage2_4_feature_availability.png

@@ -1,0 +1,5 @@
+﻿history_group,mm_group,candidate_count,candidate_ratio_within_history_group
+seen,valid_mm,490874,0.9605599682209816
+seen,missing_mm,20155,0.03944003177901841
+unseen,valid_mm,144845,0.9723033342059864
+unseen,missing_mm,4126,0.0276966657940136

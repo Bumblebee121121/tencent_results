@@ -121,7 +121,7 @@ def main() -> None:
             parent_null = struct_array.is_null().to_numpy(zero_copy_only=False)
             cold_array = struct_array.field("cold_start")
             feature_array = struct_array.field("feature_value")
-            cold_values = to_numpy_int(cold_array, fill_value=NULL_SENTINEL)
+            cold_values = to_numpy_int(cold_array,fill_value=NULL_SENTINEL,).copy()
             cold_values[parent_null] = NULL_SENTINEL
             available = ~parent_null & ~feature_array.is_null().to_numpy(zero_copy_only=False)
             available_per_candidate += available.astype(np.int16)

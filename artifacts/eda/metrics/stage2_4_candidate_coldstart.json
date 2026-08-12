@@ -1,0 +1,69 @@
+{
+  "stage": "2.4",
+  "candidate_count": 660000,
+  "history_visibility": {
+    "seen_count": 511029,
+    "seen_ratio": 0.7742863636363636,
+    "unseen_count": 148971,
+    "unseen_ratio": 0.22571363636363637,
+    "definition": "seen iff candidate OID exists in indexer['i']"
+  },
+  "feature_count": 13,
+  "feature_names": [
+    "100",
+    "101",
+    "102",
+    "112",
+    "114",
+    "115",
+    "116",
+    "117",
+    "118",
+    "119",
+    "120",
+    "121",
+    "122"
+  ],
+  "unseen_with_any_side_feature": {
+    "count": 148971,
+    "ratio_within_unseen": 1.0
+  },
+  "seen_unseen_mm_matrix": [
+    {
+      "history_group": "seen",
+      "mm_group": "valid_mm",
+      "candidate_count": 490874,
+      "candidate_ratio_within_history_group": 0.9605599682209816
+    },
+    {
+      "history_group": "seen",
+      "mm_group": "missing_mm",
+      "candidate_count": 20155,
+      "candidate_ratio_within_history_group": 0.03944003177901841
+    },
+    {
+      "history_group": "unseen",
+      "mm_group": "valid_mm",
+      "candidate_count": 144845,
+      "candidate_ratio_within_history_group": 0.9723033342059864
+    },
+    {
+      "history_group": "unseen",
+      "mm_group": "missing_mm",
+      "candidate_count": 4126,
+      "candidate_ratio_within_history_group": 0.0276966657940136
+    }
+  ],
+  "mm_scan_audit": {
+    "row_count": 4742961,
+    "invalid_oid_count": 0,
+    "null_embedding_count": 9678,
+    "wrong_dimension_count": 0,
+    "valid_embedding_count": 4733283
+  },
+  "interpretation_guardrails": [
+    "cold_start values are reported field by field without assigning business meaning",
+    "unseen is defined by OID mapping and is not forced to equal any cold_start value",
+    "side/mm availability suggests a testable representation hypothesis, not a solved cold-start claim"
+  ]
+}
