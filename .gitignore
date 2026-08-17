@@ -1,5 +1,5 @@
 # 原始数据和大型映射
-data/
+/data/
 *.pkl
 
 # Python 缓存
