@@ -1,0 +1,11 @@
+data_root: data/TencentGR-1M
+output_root: artifacts/stage3
+
+train_ratio: 0.80
+val_ratio: 0.10
+test_ratio: 0.10
+
+max_train_targets_per_user: null
+materialize_history: false
+random_seed: 42
+scan_batch_size: 8192
