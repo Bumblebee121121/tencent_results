@@ -1,0 +1,35 @@
+{
+  "stage": "4.4",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "debug": true,
+  "item_feature_fields": [
+    "100",
+    "101",
+    "102",
+    "112",
+    "114",
+    "115",
+    "116",
+    "117",
+    "118",
+    "119",
+    "120",
+    "121",
+    "122"
+  ],
+  "item_rid_array_shape": [
+    4783155,
+    13
+  ],
+  "processed_item_row_count": 10000,
+  "eval_candidate_count": 10000,
+  "official_candidate_count": 660000,
+  "source_precedence": {
+    "official": "candidate.feature_value",
+    "added_validation_or_test_target": "item_feat by RID"
+  },
+  "candidate_cold_start_used_as_model_feature": false,
+  "retrieval_id_used_as_model_item_id": false,
+  "elapsed_seconds": 184.86392210000486
+}

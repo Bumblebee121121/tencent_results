@@ -1,0 +1,19 @@
+{
+  "stage": "4.6",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "debug": true,
+  "max_users": 1000,
+  "user_count": 1000,
+  "maximum_user_id": 1000830,
+  "sequence_event_count": 89926,
+  "unknown_action_count": 750,
+  "sequence_store_backend": "numpy_memmap",
+  "materialize_history_per_sample": false,
+  "aligned_fields": [
+    "seq_item_rid",
+    "seq_action_token",
+    "seq_timestamp"
+  ],
+  "elapsed_seconds": 0.872807699997793
+}

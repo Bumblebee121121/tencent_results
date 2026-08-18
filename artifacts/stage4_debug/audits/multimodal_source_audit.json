@@ -1,0 +1,10 @@
+{
+  "expected_dimension": 32,
+  "processed_row_count": 1000,
+  "null_embedding_row_count": 4,
+  "null_embedding_policy": "missing MM; zeros in store with valid mask=0",
+  "wrong_dimension_count": 0,
+  "nan_or_inf_count": 0,
+  "duplicate_oid_count": 0,
+  "audit_complete": false
+}

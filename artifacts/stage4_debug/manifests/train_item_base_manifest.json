@@ -1,0 +1,21 @@
+{
+  "stage": "4.2",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "stage3_protocol_version": "click_target_prefix_v2",
+  "debug": true,
+  "max_users": 1000,
+  "stage3_train_cutoff": 1747637552,
+  "p50_train": 1.0,
+  "p90_train": 2.0,
+  "processed_user_count": 1000,
+  "counted_train_event_count": 74128,
+  "item_rid_count": 4783154,
+  "train_seen_item_count": 55400,
+  "maximum_train_event_count": 67,
+  "count_dtype": "int32",
+  "model_item_token_rule": "train-seen RID -> RID+1; train-unseen/null -> UNK=1; PAD=0",
+  "stage3_candidate_count_consistency_checked": 660258,
+  "stage3_count_consistency_passed": true,
+  "elapsed_seconds": 3.1892606999972486
+}

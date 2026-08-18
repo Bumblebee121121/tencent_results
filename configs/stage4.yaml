@@ -1,0 +1,58 @@
+data_root: data/TencentGR-1M
+stage3_root: artifacts/stage3
+output_root: artifacts/stage4
+log_root: logs/stage4
+
+feature_protocol_version: stage4_train_only_features_v1
+stage3_protocol_version: click_target_prefix_v2
+timestamp_unit: seconds
+mm_dim: 32
+mm_dtype: float32
+
+user_scalar_features:
+  - "103"
+  - "104"
+  - "105"
+  - "109"
+
+user_list_features:
+  - "106"
+  - "107"
+  - "108"
+  - "110"
+
+item_features:
+  - "100"
+  - "101"
+  - "102"
+  - "112"
+  - "114"
+  - "115"
+  - "116"
+  - "117"
+  - "118"
+  - "119"
+  - "120"
+  - "121"
+  - "122"
+
+special_tokens:
+  item:
+    pad: 0
+    unk: 1
+  categorical:
+    pad: 0
+    missing: 1
+    oov: 2
+  action:
+    pad: 0
+    exposure: 1
+    click: 2
+    unknown: 3
+
+use_candidate_cold_start_as_model_feature: false
+sequence_store:
+  backend: numpy_memmap
+materialize_history_per_sample: false
+scan_batch_size: 8192
+random_seed: 42

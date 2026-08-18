@@ -1,0 +1,3 @@
+2026-08-19 00:14:30,451 | INFO | log_path=D:\AI-file\tecent\logs\stage4\stage4_2_build_train_item_base_debug.log
+2026-08-19 00:14:30,453 | INFO | input seq=D:\AI-file\tecent\data\TencentGR-1M\seq stage3_counts=D:\AI-file\tecent\artifacts\stage3_debug\item_strength\item_train_counts.parquet cutoff=1747637552
+2026-08-19 00:14:33,641 | INFO | wrote counts=D:\AI-file\tecent\artifacts\stage4_debug\mappings\train_item_count_by_rid.npy tokens=D:\AI-file\tecent\artifacts\stage4_debug\mappings\rid_to_model_item_token.npy elapsed_seconds=3.19

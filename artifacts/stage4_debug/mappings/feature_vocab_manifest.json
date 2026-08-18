@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "fit_scope": {
+    "user": "users with Stage 3 train samples",
+    "item": "item feature values on items with train_event_count > 0"
+  },
+  "special_tokens": {
+    "pad": 0,
+    "missing": 1,
+    "oov": 2
+  },
+  "user": {
+    "103": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 66,
+      "missing_count": 0,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f103.npy"
+    },
+    "104": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 2,
+      "missing_count": 3,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f104.npy"
+    },
+    "105": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 7,
+      "missing_count": 140,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f105.npy"
+    },
+    "109": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 3,
+      "missing_count": 1,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f109.npy"
+    },
+    "106": {
+      "field_type": "list",
+      "train_known_vocab_size": 14,
+      "missing_count": 107,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 7,
+      "list_length_mean": 1.780264496439471,
+      "vocab_path": "mappings\\vocab\\user_f106.npy"
+    },
+    "107": {
+      "field_type": "list",
+      "train_known_vocab_size": 19,
+      "missing_count": 575,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 1,
+      "list_length_mean": 0.4150559511698881,
+      "vocab_path": "mappings\\vocab\\user_f107.npy"
+    },
+    "108": {
+      "field_type": "list",
+      "train_known_vocab_size": 4,
+      "missing_count": 810,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 2,
+      "list_length_mean": 0.1780264496439471,
+      "vocab_path": "mappings\\vocab\\user_f108.npy"
+    },
+    "110": {
+      "field_type": "list",
+      "train_known_vocab_size": 2,
+      "missing_count": 543,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 2,
+      "list_length_mean": 0.7202441505595117,
+      "vocab_path": "mappings\\vocab\\user_f110.npy"
+    }
+  },
+  "item": {
+    "100": {
+      "train_known_vocab_size": 5,
+      "vocab_path": "mappings\\vocab\\item_f100.npy"
+    },
+    "101": {
+      "train_known_vocab_size": 23,
+      "vocab_path": "mappings\\vocab\\item_f101.npy"
+    },
+    "102": {
+      "train_known_vocab_size": 113,
+      "vocab_path": "mappings\\vocab\\item_f102.npy"
+    },
+    "112": {
+      "train_known_vocab_size": 16,
+      "vocab_path": "mappings\\vocab\\item_f112.npy"
+    },
+    "114": {
+      "train_known_vocab_size": 7,
+      "vocab_path": "mappings\\vocab\\item_f114.npy"
+    },
+    "115": {
+      "train_known_vocab_size": 7,
+      "vocab_path": "mappings\\vocab\\item_f115.npy"
+    },
+    "116": {
+      "train_known_vocab_size": 11,
+      "vocab_path": "mappings\\vocab\\item_f116.npy"
+    },
+    "117": {
+      "train_known_vocab_size": 45,
+      "vocab_path": "mappings\\vocab\\item_f117.npy"
+    },
+    "118": {
+      "train_known_vocab_size": 70,
+      "vocab_path": "mappings\\vocab\\item_f118.npy"
+    },
+    "119": {
+      "train_known_vocab_size": 79,
+      "vocab_path": "mappings\\vocab\\item_f119.npy"
+    },
+    "120": {
+      "train_known_vocab_size": 48,
+      "vocab_path": "mappings\\vocab\\item_f120.npy"
+    },
+    "121": {
+      "train_known_vocab_size": 118,
+      "vocab_path": "mappings\\vocab\\item_f121.npy"
+    },
+    "122": {
+      "train_known_vocab_size": 114,
+      "vocab_path": "mappings\\vocab\\item_f122.npy"
+    }
+  }
+}

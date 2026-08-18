@@ -1,0 +1,17 @@
+{
+  "stage": "4.5",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "debug": true,
+  "mm_dim": 32,
+  "mm_dtype": "float32",
+  "mm_valid_count": 9653,
+  "mm_missing_count": 4773501,
+  "eval_candidate_count": 10000,
+  "eval_candidate_mm_valid_count": 0,
+  "eval_candidate_mm_missing_count": 10000,
+  "missing_vector_storage": "zeros with separate valid mask",
+  "l2_normalized": false,
+  "source_scan_complete": false,
+  "elapsed_seconds": 4.576030500000343
+}

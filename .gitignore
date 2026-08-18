@@ -19,3 +19,9 @@ artifacts/eda/tables/*.parquet
 # Stage 3 generated parquet artifacts
 artifacts/stage3/**/*.parquet
 artifacts/stage3_debug/**/*.parquet
+
+# Stage 4 generated feature stores are large; retain code and small JSON/CSV audits only
+artifacts/stage4/**/*.npy
+artifacts/stage4/**/*.parquet
+artifacts/stage4_debug/**/*.npy
+artifacts/stage4_debug/**/*.parquet

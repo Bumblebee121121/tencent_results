@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "expected_dimension": 32,
+  "processed_mm_row_count": 10000,
+  "null_embedding_row_count": 23,
+  "null_embedding_policy": "missing MM; zeros in store with valid mask=0",
+  "wrong_dimension_count": 0,
+  "nan_or_inf_count": 0,
+  "duplicate_oid_count": 0,
+  "audit_complete": false,
+  "history_rid_aligned_count": 9653,
+  "eval_candidate_aligned_count": 0,
+  "eval_candidate_missing_count": 10000,
+  "oid_normalization": "decimal string -> int64"
+}
