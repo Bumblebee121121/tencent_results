@@ -1,0 +1,32 @@
+{
+  "stage": "3.2",
+  "schema_version": 2,
+  "protocol_version": "click_target_prefix_v2",
+  "debug": false,
+  "max_users": null,
+  "processed_user_count": 1001845,
+  "sample_count": 8686346,
+  "total_event_count": 90223574,
+  "click_target_count": 8776358,
+  "unknown_action_count": 790581,
+  "empty_history_target_count": 90012,
+  "empty_history_target_ratio": 0.010256190551935097,
+  "skipped_empty_history_target_count": 90012,
+  "empty_history_policy": "count in audit and manifest; exclude from formal samples",
+  "materialize_history": false,
+  "history_slice": "seq[:history_end_position]",
+  "target_definition": "action_type == 1 interaction",
+  "history_timestamp_invariant": "history timestamp < target_timestamp",
+  "sample_index_path": "artifacts\\stage3\\samples\\all_samples.parquet",
+  "columns": [
+    "sample_id",
+    "user_id",
+    "target_item_rid",
+    "target_item_oid",
+    "target_timestamp",
+    "target_position",
+    "history_end_position",
+    "history_length",
+    "target_action_type"
+  ]
+}

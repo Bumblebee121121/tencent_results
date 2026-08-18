@@ -15,3 +15,7 @@ artifacts/eda/metrics/.*.tmp
 
 # 全量 item 聚合可能很大；GPT 通常只需汇总 CSV/JSON
 artifacts/eda/tables/*.parquet
+
+# Stage 3 generated parquet artifacts
+artifacts/stage3/**/*.parquet
+artifacts/stage3_debug/**/*.parquet

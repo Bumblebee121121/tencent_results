@@ -1,0 +1,46 @@
+{
+  "stage": "3.3",
+  "schema_version": 2,
+  "protocol_version": "click_target_prefix_v2",
+  "debug": false,
+  "sample_time_field": "target_timestamp",
+  "requested_ratios": {
+    "train": 0.8,
+    "validation": 0.1,
+    "test": 0.1
+  },
+  "actual_all_target_counts": {
+    "train_before_per_user_cap": 6949073,
+    "train": 6949073,
+    "validation": 868639,
+    "test": 868634
+  },
+  "actual_all_target_ratios": {
+    "train_before_per_user_cap": 0.7999995625318171,
+    "validation": 0.10000050654210643,
+    "test": 0.0999999309260764
+  },
+  "primary_counts": {
+    "validation": 456206,
+    "test": 370673
+  },
+  "max_train_targets_per_user": null,
+  "validation_start_timestamp": 1747621423,
+  "test_start_timestamp": 1747844872,
+  "train_raw_event_cutoff_exclusive": 1747621423,
+  "time_bounds": {
+    "train": {
+      "min": 1728923061,
+      "max": 1747621422
+    },
+    "validation": {
+      "min": 1747621423,
+      "max": 1747844871
+    },
+    "test": {
+      "min": 1747844872,
+      "max": 1748899866
+    }
+  },
+  "timestamp_ties_cross_splits": false
+}

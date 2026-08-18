@@ -130,7 +130,7 @@ artifacts\stage3_debug\candidates\eval_candidate_manifest.json
 ## 7. Stage 3.5 Train-only Item Strength（1,000 用户）
 
 ```bat
-python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py --max-users 1000
+python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py --max-users 1000 --overwrite
 ```
 
 查看：
@@ -146,7 +146,7 @@ Smoke 的 Head / Mid / Tail / Unseen 比例只用于验证代码链路，不能�
 ## 8. Stage 3.6 Evaluation Protocol（Debug）
 
 ```bat
-python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug
+python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug --overwrite 
 ```
 
 查看：

@@ -1,0 +1,24 @@
+{
+  "stage": "3.4",
+  "schema_version": 2,
+  "protocol_version": "click_target_prefix_v2",
+  "debug": false,
+  "union_definition": "official candidates union validation targets union test targets",
+  "official_candidate_count": 660000,
+  "unique_validation_target_count": 182150,
+  "unique_test_target_count": 218776,
+  "validation_target_official_coverage_count": 89836,
+  "validation_target_official_coverage_ratio": 0.49319791380730166,
+  "test_target_official_coverage_count": 148390,
+  "test_target_official_coverage_ratio": 0.6782736680440268,
+  "added_validation_target_count": 92314,
+  "added_test_target_count": 62918,
+  "final_candidate_count": 815232,
+  "validation_target_final_coverage_ratio": 1.0,
+  "test_target_final_coverage_ratio": 1.0,
+  "id_semantics": {
+    "item_oid": "original anonymous item ID",
+    "item_rid": "historical remapped ID; null is legal for history-unseen official candidates",
+    "retrieval_id": "candidate-local retrieval ID"
+  }
+}
