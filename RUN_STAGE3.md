@@ -21,6 +21,7 @@ python -X utf8 -u scripts\stage3\stage3_3_temporal_split.py --debug
 python -X utf8 -u scripts\stage3\stage3_4_build_eval_candidates.py --debug
 python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py --max-users 1000
 python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --debug
 ```
 
 若文件已存在且确认需要重建，请显式追加 `--overwrite`。不要混用 debug 与正式
@@ -42,6 +43,7 @@ python -X utf8 -u scripts\stage3\stage3_3_temporal_split.py
 python -X utf8 -u scripts\stage3\stage3_4_build_eval_candidates.py
 python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py
 python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py
 ```
 
 最后运行测试：

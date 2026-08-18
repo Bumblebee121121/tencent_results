@@ -146,7 +146,7 @@ Smoke 的 Head / Mid / Tail / Unseen 比例只用于验证代码链路，不能�
 ## 8. Stage 3.6 Evaluation Protocol（Debug）
 
 ```bat
-python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug --overwrite 
+python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug --overwrite
 ```
 
 查看：
@@ -158,7 +158,21 @@ artifacts\stage3_debug\evaluation\evaluation_protocol.json
 确认 `protocol_version=click_target_prefix_v2`，并包含统一 Recall、HitRate、NDCG
 以及 Overall / Head / Mid / Tail / Unseen 分组。
 
-## 9. Smoke 完成后再次测试
+## 9. Stage 3.7 与 Smoke 完成后的再次测试
+
+先运行 Stage 3.7 Primary 时间漂移审计：
+
+```bat
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --debug
+```
+
+如需同时生成严格分离的 all-target 辅助结果：
+
+```bat
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --debug --include-all-targets --overwrite
+```
+
+检查 `artifacts\stage3_debug\temporal_drift\` 中的 Primary 日桶、split 对账和 JSON 报告。
 
 ```bat
 python -X utf8 -m unittest discover -s tests\stage3 -v
@@ -188,6 +202,7 @@ python -X utf8 -u scripts\stage3\stage3_3_temporal_split.py
 python -X utf8 -u scripts\stage3\stage3_4_build_eval_candidates.py
 python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py
 python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py
 ```
 
 最后再次运行：

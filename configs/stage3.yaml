@@ -1,6 +1,8 @@
 data_root: data/TencentGR-1M
 output_root: artifacts/stage3
 protocol_version: click_target_prefix_v2
+# Stage 2.2 temporal audit established that seq timestamps and gaps are in seconds.
+timestamp_unit: seconds
 
 train_ratio: 0.80
 val_ratio: 0.10
@@ -10,3 +12,7 @@ max_train_targets_per_user: null
 materialize_history: false
 random_seed: 42
 scan_batch_size: 8192
+
+temporal_drift:
+  min_targets_per_bucket: 1
+  include_all_targets: false
