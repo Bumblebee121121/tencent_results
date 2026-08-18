@@ -24,6 +24,10 @@ python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug
 python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --debug
 ```
 
+Stage 3.7 默认只把合并后每天 `target_count >= 1000` 的时间桶用于趋势首尾变化和
+线性斜率；全部时间桶仍会写入 CSV，并用 `used_for_trend` 标记。小样本 smoke 可能
+没有 eligible 时间桶，此时 raw 审计仍会生成，eligible 指标为 `null`。
+
 若文件已存在且确认需要重建，请显式追加 `--overwrite`。不要混用 debug 与正式
 产物。旧版 attribution 协议的 Stage 3 产物与 `click_target_prefix_v2` 不兼容；
 各阶段会检查上游 manifest 的 `protocol_version`，不能混用。
@@ -43,7 +47,7 @@ python -X utf8 -u scripts\stage3\stage3_3_temporal_split.py
 python -X utf8 -u scripts\stage3\stage3_4_build_eval_candidates.py
 python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py
 python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py
-python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --include-all-targets
 ```
 
 最后运行测试：

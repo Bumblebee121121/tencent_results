@@ -83,7 +83,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--min-targets-per-bucket",
         type=int,
-        help="minimum combined daily targets required for trend fitting",
+        help="minimum combined daily targets required for eligible trend statistics",
     )
     return parser.parse_args()
 
@@ -191,7 +191,7 @@ def main() -> None:
     min_targets = (
         args.min_targets_per_bucket
         if args.min_targets_per_bucket is not None
-        else int(drift_config.get("min_targets_per_bucket", 1))
+        else int(drift_config.get("min_targets_per_bucket", 1000))
     )
     include_all_targets = bool(
         args.include_all_targets or drift_config.get("include_all_targets", False)
@@ -264,7 +264,7 @@ def main() -> None:
     summary_by_split = {str(row["split"]): row for row in summary_rows}
     report = {
         "stage": "3.7",
-        "schema_version": 1,
+        "schema_version": 2,
         "protocol_version": protocol_version,
         "debug": bool(args.debug),
         "timestamp_unit": timestamp_unit,

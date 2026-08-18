@@ -214,18 +214,27 @@ def quantify_unseen_drift(
     bucket_rows: Sequence[Mapping[str, object]],
     min_targets_per_bucket: int,
 ) -> dict[str, object]:
+    """Summarize raw daily drift and the sufficiently populated trend subset."""
+
+    if min_targets_per_bucket <= 0:
+        raise ValueError("min_targets_per_bucket must be positive")
     by_day: dict[int, np.ndarray] = defaultdict(lambda: np.zeros(2, dtype=np.int64))
     for row in bucket_rows:
         day = int(row["days_from_train_cutoff"])
         by_day[day][0] += int(row["target_count"])
         by_day[day][1] += int(row["unseen_count"])
+    if not by_day:
+        raise ValueError("temporal drift quantification requires at least one bucket")
+
     ordered_days = np.asarray(sorted(by_day), dtype=np.float64)
     target_counts = np.asarray([by_day[int(day)][0] for day in ordered_days], dtype=np.int64)
     unseen_counts = np.asarray([by_day[int(day)][1] for day in ordered_days], dtype=np.int64)
     unseen_ratios = unseen_counts / target_counts
     eligible = target_counts >= min_targets_per_bucket
     eligible_days = ordered_days[eligible]
+    eligible_target_counts = target_counts[eligible]
     eligible_ratios = unseen_ratios[eligible]
+
     slope: float | None = None
     if eligible_days.size >= 2 and np.ptp(eligible_days) > 0:
         centered_days = eligible_days - eligible_days.mean()
@@ -233,16 +242,46 @@ def quantify_unseen_drift(
             np.sum(centered_days * (eligible_ratios - eligible_ratios.mean()))
             / np.sum(centered_days**2)
         )
+
+    eligible_summary: dict[str, object]
+    if eligible_days.size:
+        eligible_summary = {
+            "first_eligible_day": int(eligible_days[0]),
+            "last_eligible_day": int(eligible_days[-1]),
+            "first_eligible_day_target_count": int(eligible_target_counts[0]),
+            "last_eligible_day_target_count": int(eligible_target_counts[-1]),
+            "first_eligible_day_unseen_ratio": float(eligible_ratios[0]),
+            "last_eligible_day_unseen_ratio": float(eligible_ratios[-1]),
+            "eligible_unseen_ratio_change_first_to_last": float(
+                eligible_ratios[-1] - eligible_ratios[0]
+            ),
+        }
+    else:
+        # A small debug sample can legitimately have no day reaching the formal
+        # threshold. Keep the raw audit usable while making the absent trend explicit.
+        eligible_summary = {
+            "first_eligible_day": None,
+            "last_eligible_day": None,
+            "first_eligible_day_target_count": None,
+            "last_eligible_day_target_count": None,
+            "first_eligible_day_unseen_ratio": None,
+            "last_eligible_day_unseen_ratio": None,
+            "eligible_unseen_ratio_change_first_to_last": None,
+        }
+
     return {
+        "first_day": int(ordered_days[0]),
+        "last_day": int(ordered_days[-1]),
         "first_day_unseen_ratio": float(unseen_ratios[0]),
         "last_day_unseen_ratio": float(unseen_ratios[-1]),
+        "raw_unseen_ratio_change_first_to_last": float(
+            unseen_ratios[-1] - unseen_ratios[0]
+        ),
         "min_daily_unseen_ratio": float(unseen_ratios.min()),
         "max_daily_unseen_ratio": float(unseen_ratios.max()),
         "weighted_mean_unseen_ratio": float(unseen_counts.sum() / target_counts.sum()),
-        "unseen_ratio_change_first_to_last": float(unseen_ratios[-1] - unseen_ratios[0]),
-        "linear_slope_unseen_ratio_per_day": slope,
         "daily_bucket_count": int(ordered_days.size),
         "trend_bucket_count": int(np.count_nonzero(eligible)),
-        "first_day_days_from_train_cutoff": int(ordered_days[0]),
-        "last_day_days_from_train_cutoff": int(ordered_days[-1]),
+        **eligible_summary,
+        "linear_slope_unseen_ratio_per_day": slope,
     }

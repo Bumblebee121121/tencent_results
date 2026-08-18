@@ -9,6 +9,7 @@ from src.data.temporal_drift import (
     aggregate_temporal_buckets,
     build_split_summary,
     encode_strength_groups,
+    quantify_unseen_drift,
     verify_split_summary,
     validate_fixed_strength_groups,
 )
@@ -102,6 +103,58 @@ class TemporalDriftAuditTest(unittest.TestCase):
         self.assertEqual(
             {row["analysis_scope"] for row in auxiliary}, {"all_targets"}
         )
+
+    def test_sparse_tail_buckets_are_excluded_from_trend(self) -> None:
+        day_zero_count = 10_000
+        day_one_count = 5_000
+        day_two_count = 3
+        timestamps = np.concatenate(
+            [
+                np.zeros(day_zero_count, dtype=np.int64),
+                np.full(day_one_count, 86_400, dtype=np.int64),
+                np.full(day_two_count, 2 * 86_400, dtype=np.int64),
+            ]
+        )
+        groups = np.concatenate(
+            [
+                np.full(day_zero_count, STRENGTH_GROUPS.index("Head"), dtype=np.int8),
+                np.full(day_one_count, STRENGTH_GROUPS.index("Head"), dtype=np.int8),
+                np.full(day_two_count, STRENGTH_GROUPS.index("Unseen"), dtype=np.int8),
+            ]
+        )
+        groups[:1_000] = STRENGTH_GROUPS.index("Unseen")
+        groups[day_zero_count : day_zero_count + 1_000] = STRENGTH_GROUPS.index(
+            "Unseen"
+        )
+        rows = aggregate_temporal_buckets(
+            target_timestamps=timestamps,
+            strength_codes=groups,
+            split_codes=np.zeros(timestamps.size, dtype=np.int8),
+            train_cutoff=0,
+            timestamp_unit="seconds",
+            min_targets_per_bucket=1_000,
+            analysis_scope="primary",
+        )
+        drift = quantify_unseen_drift(rows, min_targets_per_bucket=1_000)
+
+        day_zero = next(row for row in rows if row["days_from_train_cutoff"] == 0)
+        day_one = next(row for row in rows if row["days_from_train_cutoff"] == 1)
+        day_two = next(row for row in rows if row["days_from_train_cutoff"] == 2)
+        self.assertTrue(day_zero["used_for_trend"])
+        self.assertTrue(day_one["used_for_trend"])
+        self.assertFalse(day_two["used_for_trend"])
+        self.assertEqual(drift["trend_bucket_count"], 2)
+        self.assertEqual(drift["first_eligible_day"], 0)
+        self.assertEqual(drift["last_eligible_day"], 1)
+        self.assertEqual(drift["first_eligible_day_target_count"], 10_000)
+        self.assertEqual(drift["last_eligible_day_target_count"], 5_000)
+        self.assertAlmostEqual(drift["first_eligible_day_unseen_ratio"], 0.1)
+        self.assertAlmostEqual(drift["last_eligible_day_unseen_ratio"], 0.2)
+        self.assertAlmostEqual(
+            drift["eligible_unseen_ratio_change_first_to_last"], 0.1
+        )
+        self.assertAlmostEqual(drift["linear_slope_unseen_ratio_per_day"], 0.1)
+        self.assertAlmostEqual(drift["raw_unseen_ratio_change_first_to_last"], 0.9)
 
 
 if __name__ == "__main__":

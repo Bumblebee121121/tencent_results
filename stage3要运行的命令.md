@@ -173,6 +173,9 @@ python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --debug --incl
 ```
 
 检查 `artifacts\stage3_debug\temporal_drift\` 中的 Primary 日桶、split 对账和 JSON 报告。
+默认 `min_targets_per_bucket=1000`：CSV 保留所有日桶，只有
+`used_for_trend=true` 的日桶用于 eligible 首尾变化及线性斜率。Smoke 数据可能没有
+eligible 日桶，此时报告中的 eligible 字段为 `null`，不影响检查 raw 日桶逻辑。
 
 ```bat
 python -X utf8 -m unittest discover -s tests\stage3 -v
@@ -202,7 +205,23 @@ python -X utf8 -u scripts\stage3\stage3_3_temporal_split.py
 python -X utf8 -u scripts\stage3\stage3_4_build_eval_candidates.py
 python -X utf8 -u scripts\stage3\stage3_5_build_item_strength.py
 python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py
-python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --include-all-targets
+```
+
+若 Stage 3.1～3.6 的正式产物已经完成，只需按 updated plan 单独重跑 3.7：
+
+```bat
+python -X utf8 -u scripts\stage3\stage3_7_temporal_drift_audit.py --include-all-targets --overwrite
+python -X utf8 -m unittest discover -s tests\stage3 -v
+```
+
+重点确认报告中：
+
+```text
+stage3_5_distribution_consistency_passed = true
+min_targets_per_bucket = 1000
+trend_bucket_count > 0
+last_eligible_day_target_count >= 1000
 ```
 
 最后再次运行：
