@@ -1,0 +1,49 @@
+{
+  "stage": "3.6",
+  "schema_version": 1,
+  "debug": true,
+  "primary_evaluation_files": {
+    "validation": "samples/val_primary.parquet",
+    "test": "samples/test_primary.parquet"
+  },
+  "ground_truth_per_record": 1,
+  "candidate_pool": "candidates/eval_candidates.parquet",
+  "item_strength": "item_strength/item_train_counts.parquet",
+  "metrics_implementation": "src/evaluation/retrieval_metrics.py",
+  "recall_ks": [
+    10,
+    50,
+    100,
+    500
+  ],
+  "hitrate_ks": [
+    10,
+    50,
+    100,
+    500
+  ],
+  "ndcg_ks": [
+    10,
+    50,
+    100
+  ],
+  "groups": [
+    "Overall",
+    "Head",
+    "Mid",
+    "Tail",
+    "Unseen"
+  ],
+  "definitions": {
+    "Recall@K": "mean(ground_truth appears in top K)",
+    "HitRate@K": "equal to Recall@K for one ground truth",
+    "NDCG@K": "1/log2(rank+1) when rank <= K, otherwise 0"
+  },
+  "channel_analysis": [
+    "intersection_count",
+    "union_count",
+    "jaccard",
+    "incremental_hits",
+    "incremental_recall"
+  ]
+}

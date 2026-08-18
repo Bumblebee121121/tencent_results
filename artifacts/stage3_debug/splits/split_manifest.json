@@ -1,0 +1,45 @@
+{
+  "stage": "3.3",
+  "schema_version": 1,
+  "debug": true,
+  "sample_time_field": "target_exposure_timestamp",
+  "requested_ratios": {
+    "train": 0.8,
+    "validation": 0.1,
+    "test": 0.1
+  },
+  "actual_all_target_counts": {
+    "train_before_per_user_cap": 13,
+    "train": 13,
+    "validation": 1,
+    "test": 2
+  },
+  "actual_all_target_ratios": {
+    "train_before_per_user_cap": 0.8125,
+    "validation": 0.0625,
+    "test": 0.125
+  },
+  "primary_counts": {
+    "validation": 1,
+    "test": 2
+  },
+  "max_train_targets_per_user": null,
+  "validation_start_timestamp": 1747625685,
+  "test_start_timestamp": 1747642684,
+  "train_raw_event_cutoff_exclusive": 1747625685,
+  "time_bounds": {
+    "train": {
+      "min": 1745673906,
+      "max": 1747621396
+    },
+    "validation": {
+      "min": 1747625685,
+      "max": 1747625685
+    },
+    "test": {
+      "min": 1747642684,
+      "max": 1748293671
+    }
+  },
+  "timestamp_ties_cross_splits": false
+}

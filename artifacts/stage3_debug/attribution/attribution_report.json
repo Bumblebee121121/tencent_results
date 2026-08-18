@@ -1,0 +1,23 @@
+{
+  "stage": "3.1",
+  "protocol": "nearest preceding exposure for the same user and item; no window",
+  "debug": true,
+  "max_users": 1000,
+  "processed_user_count": 1000,
+  "click_count": 8715,
+  "attributed_click_count": 16,
+  "attribution_failure_count": 8699,
+  "attribution_coverage": 0.0018359150889271372,
+  "exposure_to_click_gap_seconds": {
+    "min": 1430.0,
+    "median": 400567.0,
+    "p90": 1037907.0,
+    "p95": 1060363.75,
+    "p99": 1111415.95,
+    "max": 1124179.0
+  },
+  "multiple_preceding_exposure_count": 2,
+  "multiple_preceding_exposure_ratio": 0.125,
+  "same_timestamp_count": 0,
+  "same_timestamp_ratio": 0.0
+}

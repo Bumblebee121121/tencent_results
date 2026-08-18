@@ -1,0 +1,23 @@
+{
+  "stage": "3.4",
+  "schema_version": 1,
+  "debug": true,
+  "union_definition": "official candidates union validation targets union test targets",
+  "official_candidate_count": 660000,
+  "unique_validation_target_count": 1,
+  "unique_test_target_count": 2,
+  "validation_target_official_coverage_count": 1,
+  "validation_target_official_coverage_ratio": 1.0,
+  "test_target_official_coverage_count": 2,
+  "test_target_official_coverage_ratio": 1.0,
+  "added_validation_target_count": 0,
+  "added_test_target_count": 0,
+  "final_candidate_count": 660000,
+  "validation_target_final_coverage_ratio": 1.0,
+  "test_target_final_coverage_ratio": 1.0,
+  "id_semantics": {
+    "item_oid": "original anonymous item ID",
+    "item_rid": "historical remapped ID; null is legal for history-unseen official candidates",
+    "retrieval_id": "candidate-local retrieval ID"
+  }
+}
