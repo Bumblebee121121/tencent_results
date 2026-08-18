@@ -1,5 +1,6 @@
 data_root: data/TencentGR-1M
 output_root: artifacts/stage3
+protocol_version: click_target_prefix_v2
 
 train_ratio: 0.80
 val_ratio: 0.10

@@ -1,44 +1,45 @@
 {
   "stage": "3.3",
-  "schema_version": 1,
+  "schema_version": 2,
+  "protocol_version": "click_target_prefix_v2",
   "debug": true,
-  "sample_time_field": "target_exposure_timestamp",
+  "sample_time_field": "target_timestamp",
   "requested_ratios": {
     "train": 0.8,
     "validation": 0.1,
     "test": 0.1
   },
   "actual_all_target_counts": {
-    "train_before_per_user_cap": 13,
-    "train": 13,
-    "validation": 1,
-    "test": 2
+    "train_before_per_user_cap": 6897,
+    "train": 6897,
+    "validation": 862,
+    "test": 862
   },
   "actual_all_target_ratios": {
-    "train_before_per_user_cap": 0.8125,
-    "validation": 0.0625,
-    "test": 0.125
+    "train_before_per_user_cap": 0.8000231991648301,
+    "validation": 0.09998840041758497,
+    "test": 0.09998840041758497
   },
   "primary_counts": {
-    "validation": 1,
-    "test": 2
+    "validation": 444,
+    "test": 375
   },
   "max_train_targets_per_user": null,
-  "validation_start_timestamp": 1747625685,
-  "test_start_timestamp": 1747642684,
-  "train_raw_event_cutoff_exclusive": 1747625685,
+  "validation_start_timestamp": 1747637552,
+  "test_start_timestamp": 1747869580,
+  "train_raw_event_cutoff_exclusive": 1747637552,
   "time_bounds": {
     "train": {
-      "min": 1745673906,
-      "max": 1747621396
+      "min": 1728996498,
+      "max": 1747637045
     },
     "validation": {
-      "min": 1747625685,
-      "max": 1747625685
+      "min": 1747637552,
+      "max": 1747869570
     },
     "test": {
-      "min": 1747642684,
-      "max": 1748293671
+      "min": 1747869580,
+      "max": 1748661244
     }
   },
   "timestamp_ties_cross_splits": false

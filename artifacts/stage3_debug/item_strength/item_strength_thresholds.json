@@ -1,13 +1,14 @@
 {
   "stage": "3.5",
-  "schema_version": 1,
+  "schema_version": 2,
+  "protocol_version": "click_target_prefix_v2",
   "debug": true,
   "max_users": 1000,
   "definition": "count raw events whose timestamp is strictly before the train cutoff",
-  "train_raw_event_cutoff_exclusive": 1747625685,
+  "train_raw_event_cutoff_exclusive": 1747637552,
   "processed_user_count": 1000,
-  "counted_train_event_count": 73564,
-  "train_seen_item_count": 55019,
+  "counted_train_event_count": 74128,
+  "train_seen_item_count": 55400,
   "p50_train": 1.0,
   "p90_train": 2.0,
   "groups": {
@@ -17,6 +18,6 @@
     "Head": "count > p90_train"
   },
   "item_train_counts_scope": "evaluation candidate pool",
-  "evaluation_candidate_count": 660000,
+  "evaluation_candidate_count": 660258,
   "target_distribution_scope": "primary validation/test targets"
 }

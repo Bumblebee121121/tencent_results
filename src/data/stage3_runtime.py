@@ -76,6 +76,23 @@ def save_json(data: Mapping[str, Any], path: Path, overwrite: bool) -> None:
         handle.write("\n")
 
 
+def require_protocol_manifest(path: Path, expected_version: str) -> dict[str, Any]:
+    """Load an upstream manifest and reject mixed Stage 3 protocol artifacts."""
+
+    require_paths([path])
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError(f"manifest must contain a JSON object: {path.resolve()}")
+    actual_version = data.get("protocol_version")
+    if actual_version != expected_version:
+        raise ValueError(
+            f"protocol mismatch in {path.resolve()}: "
+            f"expected {expected_version!r}, found {actual_version!r}"
+        )
+    return data
+
+
 def save_csv(
     rows: Sequence[Mapping[str, Any]],
     fieldnames: Sequence[str],

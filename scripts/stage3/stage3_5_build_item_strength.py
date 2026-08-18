@@ -25,6 +25,7 @@ from src.data.stage3_runtime import (
     load_config,
     load_item_mapping,
     require_paths,
+    require_protocol_manifest,
     runtime_paths,
     save_csv,
     save_json,
@@ -82,12 +83,14 @@ def main() -> None:
     data_root, output_root = runtime_paths(config, args.data_root, args.output_root, debug)
     split_manifest_path = output_root / "splits" / "split_manifest.json"
     candidate_path = output_root / "candidates" / "eval_candidates.parquet"
+    candidate_manifest_path = output_root / "candidates" / "eval_candidate_manifest.json"
     val_path = output_root / "samples" / "val_primary.parquet"
     test_path = output_root / "samples" / "test_primary.parquet"
     require_paths(
         [
             split_manifest_path,
             candidate_path,
+            candidate_manifest_path,
             val_path,
             test_path,
             data_root / "seq",
@@ -103,6 +106,10 @@ def main() -> None:
     guard_outputs(output_paths.values(), args.overwrite)
 
     manifest = load_manifest(split_manifest_path)
+    protocol_version = str(config.get("protocol_version", "click_target_prefix_v2"))
+    if manifest.get("protocol_version") != protocol_version:
+        raise ValueError("split manifest protocol_version does not match Stage 3 config")
+    require_protocol_manifest(candidate_manifest_path, protocol_version)
     cutoff = int(manifest["train_raw_event_cutoff_exclusive"])
     mapping = load_item_mapping(data_root / "indexer.pkl")
     max_rid = max(int(value) for value in mapping.values())
@@ -160,7 +167,8 @@ def main() -> None:
     save_csv(test_rows, fields, output_paths["test"], args.overwrite)
     threshold_report = {
         "stage": "3.5",
-        "schema_version": 1,
+        "schema_version": 2,
+        "protocol_version": protocol_version,
         "debug": debug,
         "max_users": args.max_users,
         "definition": "count raw events whose timestamp is strictly before the train cutoff",

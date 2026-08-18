@@ -14,7 +14,8 @@ if not exist logs\stage3 mkdir logs\stage3
 先运行小样本 smoke 链路（输出固定进入 `artifacts/stage3_debug/`）：
 
 ```cmd
-python -X utf8 -u scripts\stage3\stage3_1_click_exposure_attribution.py --max-users 1000
+python -X utf8 -m unittest discover -s tests\stage3 -v
+python -X utf8 -u scripts\stage3\stage3_1_click_target_audit.py --max-users 1000
 python -X utf8 -u scripts\stage3\stage3_2_build_next_click_samples.py --max-users 1000
 python -X utf8 -u scripts\stage3\stage3_3_temporal_split.py --debug
 python -X utf8 -u scripts\stage3\stage3_4_build_eval_candidates.py --debug
@@ -23,16 +24,17 @@ python -X utf8 -u scripts\stage3\stage3_6_build_eval_protocol.py --debug
 ```
 
 若文件已存在且确认需要重建，请显式追加 `--overwrite`。不要混用 debug 与正式
-产物。
+产物。旧版 attribution 协议的 Stage 3 产物与 `click_target_prefix_v2` 不兼容；
+各阶段会检查上游 manifest 的 `protocol_version`，不能混用。
 
 正式任务必须逐步执行，不要一次性启动整条 pipeline。首先运行 3.1：
 
 ```cmd
-python -X utf8 -u scripts\stage3\stage3_1_click_exposure_attribution.py
+python -X utf8 -u scripts\stage3\stage3_1_click_target_audit.py
 ```
 
-检查 `artifacts/stage3/attribution/attribution_report.json` 中的 attribution
-coverage 和 gap 分布，确认协议可接受后，再逐个执行：
+检查 `artifacts/stage3/click_target_audit/click_target_audit_report.json` 中的
+click target 数量、用户覆盖、空历史比例和历史长度分布，确认协议可接受后，再逐个执行：
 
 ```cmd
 python -X utf8 -u scripts\stage3\stage3_2_build_next_click_samples.py

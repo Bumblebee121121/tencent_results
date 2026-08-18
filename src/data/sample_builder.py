@@ -7,7 +7,7 @@ from typing import Any, Iterable, Mapping, Sequence
 import numpy as np
 import pyarrow as pa
 
-from .attribution import AttributionStats, attribute_sequence
+from .click_target import ClickTargetStats, find_click_targets
 
 
 SAMPLE_SCHEMA = pa.schema(
@@ -16,13 +16,11 @@ SAMPLE_SCHEMA = pa.schema(
         ("user_id", pa.int64()),
         ("target_item_rid", pa.int64()),
         ("target_item_oid", pa.int64()),
-        ("target_exposure_timestamp", pa.int64()),
-        ("target_click_timestamp", pa.int64()),
-        ("target_exposure_position", pa.int32()),
-        ("target_click_position", pa.int32()),
+        ("target_timestamp", pa.int64()),
+        ("target_position", pa.int32()),
         ("history_end_position", pa.int32()),
         ("history_length", pa.int32()),
-        ("attribution_gap", pa.int64()),
+        ("target_action_type", pa.int8()),
     ]
 )
 
@@ -56,16 +54,24 @@ def build_samples_for_users(
     sequences: Iterable[Sequence[Mapping[str, Any]]],
     rid_to_oid: np.ndarray,
     first_sample_id: int = 0,
-) -> tuple[list[dict[str, int]], AttributionStats]:
+) -> tuple[list[dict[str, int]], ClickTargetStats]:
     """Build deterministic compact samples for a batch of complete user rows."""
 
+    user_ids = list(user_ids)
+    sequences = list(sequences)
+    if len(user_ids) != len(sequences):
+        raise ValueError("user_ids and sequences must have equal length")
     lookup = oid_lookup_from_array(rid_to_oid)
     records: list[dict[str, int]] = []
-    stats = AttributionStats()
+    stats = ClickTargetStats()
     next_sample_id = int(first_sample_id)
     for user_id, events in zip(user_ids, sequences):
-        user_samples, user_stats = attribute_sequence(int(user_id), events, lookup)
-        for sample in user_samples:
+        user_targets, user_stats = find_click_targets(events)
+        for sample in user_targets:
+            if sample["history_length"] == 0:
+                continue
+            sample["user_id"] = int(user_id)
+            sample["target_item_oid"] = lookup(sample["target_item_rid"])
             sample["sample_id"] = next_sample_id
             next_sample_id += 1
             records.append(sample)

@@ -1,4 +1,4 @@
-"""Stage 3.3: split compact samples by global target-exposure time."""
+"""Stage 3.3: split compact samples by global pseudo-target time."""
 
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ from src.data.stage3_runtime import (
     guard_outputs,
     load_config,
     require_paths,
+    require_protocol_manifest,
     runtime_paths,
     save_json,
 )
@@ -51,7 +52,10 @@ def main() -> None:
     config = load_config(args.config)
     _, output_root = runtime_paths(config, args.data_root, args.output_root, args.debug)
     input_path = output_root / "samples" / "all_samples.parquet"
-    require_paths([input_path])
+    sample_manifest_path = output_root / "samples" / "sample_manifest.json"
+    require_paths([input_path, sample_manifest_path])
+    protocol_version = str(config.get("protocol_version", "click_target_prefix_v2"))
+    require_protocol_manifest(sample_manifest_path, protocol_version)
 
     paths = {
         "train": output_root / "samples" / "train_samples.parquet",
@@ -64,7 +68,7 @@ def main() -> None:
     guard_outputs(paths.values(), args.overwrite)
 
     dataset = ds.dataset(input_path, format="parquet")
-    metadata_columns = ["sample_id", "user_id", "target_exposure_timestamp"]
+    metadata_columns = ["sample_id", "user_id", "target_timestamp"]
     required = set(metadata_columns)
     if not required.issubset(dataset.schema.names):
         raise ValueError(f"sample index missing columns: {sorted(required - set(dataset.schema.names))}")
@@ -75,7 +79,7 @@ def main() -> None:
         id_parts.append(np.asarray(columns["sample_id"].to_numpy(), dtype=np.int64))
         user_parts.append(np.asarray(columns["user_id"].to_numpy(), dtype=np.int64))
         timestamp_parts.append(
-            np.asarray(columns["target_exposure_timestamp"].to_numpy(), dtype=np.int64)
+            np.asarray(columns["target_timestamp"].to_numpy(), dtype=np.int64)
         )
         if batch_number % 20 == 0:
             print(f"read metadata batches={batch_number}")
@@ -118,7 +122,7 @@ def main() -> None:
             table = pa.Table.from_batches([batch]).select(SAMPLE_SCHEMA.names)
             batch_ids = np.asarray(table["sample_id"].to_numpy(), dtype=np.int64)
             batch_times = np.asarray(
-                table["target_exposure_timestamp"].to_numpy(), dtype=np.int64
+                table["target_timestamp"].to_numpy(), dtype=np.int64
             )
             batch_splits = assign_splits(batch_times, cutoffs)
             masks = {
@@ -145,9 +149,10 @@ def main() -> None:
     total = timestamps.size
     manifest = {
         "stage": "3.3",
-        "schema_version": 1,
+        "schema_version": 2,
+        "protocol_version": protocol_version,
         "debug": bool(args.debug),
-        "sample_time_field": "target_exposure_timestamp",
+        "sample_time_field": "target_timestamp",
         "requested_ratios": {
             "train": train_ratio,
             "validation": val_ratio,

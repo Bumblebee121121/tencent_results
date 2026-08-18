@@ -23,6 +23,7 @@ from src.data.stage3_runtime import (
     load_config,
     load_item_mapping,
     require_paths,
+    require_protocol_manifest,
     runtime_paths,
     save_json,
 )
@@ -61,7 +62,12 @@ def main() -> None:
     val_path = output_root / "samples" / "val_all_targets.parquet"
     test_path = output_root / "samples" / "test_all_targets.parquet"
     official_dir = data_root / "candidate"
-    require_paths([val_path, test_path, official_dir, data_root / "indexer.pkl"])
+    split_manifest_path = output_root / "splits" / "split_manifest.json"
+    require_paths(
+        [val_path, test_path, split_manifest_path, official_dir, data_root / "indexer.pkl"]
+    )
+    protocol_version = str(config.get("protocol_version", "click_target_prefix_v2"))
+    require_protocol_manifest(split_manifest_path, protocol_version)
 
     output_path = output_root / "candidates" / "eval_candidates.parquet"
     manifest_path = output_root / "candidates" / "eval_candidate_manifest.json"
@@ -137,7 +143,8 @@ def main() -> None:
         raise AssertionError("evaluation target coverage is not 100%")
     manifest = {
         "stage": "3.4",
-        "schema_version": 1,
+        "schema_version": 2,
+        "protocol_version": protocol_version,
         "debug": bool(args.debug),
         "union_definition": "official candidates union validation targets union test targets",
         "official_candidate_count": len(official_oids),

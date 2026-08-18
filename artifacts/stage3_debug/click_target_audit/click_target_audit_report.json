@@ -1,0 +1,40 @@
+{
+  "stage": "3.1",
+  "schema_version": 2,
+  "protocol_version": "click_target_prefix_v2",
+  "protocol": "action_type=1 interaction is target; history timestamp < target_timestamp",
+  "debug": true,
+  "max_users": 1000,
+  "processed_user_count": 1000,
+  "total_event_count": 89926,
+  "click_target_count": 8715,
+  "users_with_click_count": 984,
+  "users_with_click_ratio": 0.984,
+  "unknown_action_count": 750,
+  "click_targets_per_user": {
+    "min": 0.0,
+    "p25": 4.0,
+    "p50": 7.0,
+    "p75": 12.0,
+    "p90": 17.0,
+    "p95": 20.0,
+    "p99": 29.019999999999982,
+    "max": 41.0,
+    "mean": 8.715
+  },
+  "history_length_before_target": {
+    "min": 0.0,
+    "p25": 25.0,
+    "p50": 49.0,
+    "p75": 72.0,
+    "p90": 86.0,
+    "p95": 91.0,
+    "p99": 96.0,
+    "max": 99.0,
+    "mean": 48.02868617326449
+  },
+  "empty_history_target_count": 94,
+  "empty_history_target_ratio": 0.010786001147446931,
+  "same_timestamp_prefix_excluded_count": 203,
+  "same_timestamp_prefix_excluded_definition": "targets with at least one earlier sequence element at target_timestamp"
+}

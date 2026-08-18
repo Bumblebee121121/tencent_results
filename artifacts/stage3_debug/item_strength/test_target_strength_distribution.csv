@@ -1,5 +1,5 @@
 ﻿strength_group,target_count,target_ratio
-Head,0,0.0
-Mid,1,0.5
-Tail,0,0.0
-Unseen,1,0.5
+Head,20,0.05333333333333334
+Mid,5,0.013333333333333334
+Tail,28,0.07466666666666667
+Unseen,322,0.8586666666666667

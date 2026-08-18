@@ -32,13 +32,19 @@ def main() -> None:
     output_path = output_root / "evaluation" / "evaluation_protocol.json"
     protocol = {
         "stage": "3.6",
-        "schema_version": 1,
+        "schema_version": 2,
+        "protocol_version": str(config.get("protocol_version", "click_target_prefix_v2")),
         "debug": bool(args.debug),
         "primary_evaluation_files": {
             "validation": "samples/val_primary.parquet",
             "test": "samples/test_primary.parquet",
         },
         "ground_truth_per_record": 1,
+        "target_field": "target_item_oid",
+        "target_time_field": "target_timestamp",
+        "sample_target_definition": "action_type == 1 interaction",
+        "history_timestamp_invariant": "history timestamp < target_timestamp",
+        "empty_history_policy": "excluded from formal Train/Validation/Test samples",
         "candidate_pool": "candidates/eval_candidates.parquet",
         "item_strength": "item_strength/item_train_counts.parquet",
         "metrics_implementation": "src/evaluation/retrieval_metrics.py",
