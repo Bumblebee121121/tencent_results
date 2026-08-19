@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "fit_scope": {
+    "user": "users with Stage 3 train samples",
+    "item": "item feature values on items with train_event_count > 0"
+  },
+  "special_tokens": {
+    "pad": 0,
+    "missing": 1,
+    "oov": 2
+  },
+  "user": {
+    "103": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 86,
+      "missing_count": 833,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f103.npy"
+    },
+    "104": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 2,
+      "missing_count": 3690,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f104.npy"
+    },
+    "105": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 7,
+      "missing_count": 138681,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f105.npy"
+    },
+    "109": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 3,
+      "missing_count": 343,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f109.npy"
+    },
+    "106": {
+      "field_type": "list",
+      "train_known_vocab_size": 14,
+      "missing_count": 117761,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 8,
+      "list_length_mean": 1.737754041341637,
+      "vocab_path": "mappings\\vocab\\user_f106.npy"
+    },
+    "107": {
+      "field_type": "list",
+      "train_known_vocab_size": 19,
+      "missing_count": 601661,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 1,
+      "list_length_mean": 0.38864349722245084,
+      "vocab_path": "mappings\\vocab\\user_f107.npy"
+    },
+    "108": {
+      "field_type": "list",
+      "train_known_vocab_size": 4,
+      "missing_count": 815642,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 2,
+      "list_length_mean": 0.17196113158581952,
+      "vocab_path": "mappings\\vocab\\user_f108.npy"
+    },
+    "110": {
+      "field_type": "list",
+      "train_known_vocab_size": 2,
+      "missing_count": 559503,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 2,
+      "list_length_mean": 0.6890425254104848,
+      "vocab_path": "mappings\\vocab\\user_f110.npy"
+    }
+  },
+  "item": {
+    "100": {
+      "train_known_vocab_size": 6,
+      "vocab_path": "mappings\\vocab\\item_f100.npy"
+    },
+    "101": {
+      "train_known_vocab_size": 51,
+      "vocab_path": "mappings\\vocab\\item_f101.npy"
+    },
+    "102": {
+      "train_known_vocab_size": 79822,
+      "vocab_path": "mappings\\vocab\\item_f102.npy"
+    },
+    "112": {
+      "train_known_vocab_size": 30,
+      "vocab_path": "mappings\\vocab\\item_f112.npy"
+    },
+    "114": {
+      "train_known_vocab_size": 20,
+      "vocab_path": "mappings\\vocab\\item_f114.npy"
+    },
+    "115": {
+      "train_known_vocab_size": 658,
+      "vocab_path": "mappings\\vocab\\item_f115.npy"
+    },
+    "116": {
+      "train_known_vocab_size": 18,
+      "vocab_path": "mappings\\vocab\\item_f116.npy"
+    },
+    "117": {
+      "train_known_vocab_size": 479,
+      "vocab_path": "mappings\\vocab\\item_f117.npy"
+    },
+    "118": {
+      "train_known_vocab_size": 1376,
+      "vocab_path": "mappings\\vocab\\item_f118.npy"
+    },
+    "119": {
+      "train_known_vocab_size": 3981,
+      "vocab_path": "mappings\\vocab\\item_f119.npy"
+    },
+    "120": {
+      "train_known_vocab_size": 3201,
+      "vocab_path": "mappings\\vocab\\item_f120.npy"
+    },
+    "121": {
+      "train_known_vocab_size": 1857917,
+      "vocab_path": "mappings\\vocab\\item_f121.npy"
+    },
+    "122": {
+      "train_known_vocab_size": 80000,
+      "vocab_path": "mappings\\vocab\\item_f122.npy"
+    }
+  }
+}

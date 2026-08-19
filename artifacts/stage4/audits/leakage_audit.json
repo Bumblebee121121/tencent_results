@@ -1,0 +1,10 @@
+{
+  "fit_order": "split first -> fit train-known state -> transform all splits",
+  "item_vocabulary_fit_scope": "train-seen item feature values only",
+  "user_vocabulary_fit_scope": "users with Stage 3 train samples only",
+  "train_count_cutoff": 1747621423,
+  "stage3_count_consistency_passed": true,
+  "train_unseen_item_token": 1,
+  "retrieval_id_used_as_model_item_id": false,
+  "candidate_cold_start_used_as_model_feature": false
+}

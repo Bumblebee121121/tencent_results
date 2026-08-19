@@ -10,7 +10,11 @@ from src.features.feature_contract import (
     FeatureComparison,
     select_item_side_source,
 )
-from src.features.multimodal_store import optional_mm_vector, validate_mm_vector
+from src.features.multimodal_store import (
+    candidate_row_index,
+    optional_mm_vector,
+    validate_mm_vector,
+)
 
 
 class SourceAndMultimodalContractsTest(unittest.TestCase):
@@ -45,6 +49,15 @@ class SourceAndMultimodalContractsTest(unittest.TestCase):
         invalid[0] = np.nan
         with self.assertRaises(ValueError):
             validate_mm_vector(invalid, 32)
+
+    def test_candidate_mm_alignment_uses_row_order_not_retrieval_id(self) -> None:
+        index = candidate_row_index(
+            item_oids=[2003, 2001, 2002],
+            retrieval_ids=[2, 0, 1],
+        )
+        self.assertEqual(index, {2003: 0, 2001: 1, 2002: 2})
+        with self.assertRaises(ValueError):
+            candidate_row_index([2001, 2002], [7, 7])
 
 
 if __name__ == "__main__":

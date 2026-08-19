@@ -15,7 +15,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.data.stage3_runtime import load_item_mapping
-from src.features.multimodal_store import validate_mm_vector
+from src.features.multimodal_store import candidate_row_index, validate_mm_vector
 from src.features.runtime import (
     Timer,
     add_common_arguments,
@@ -73,7 +73,7 @@ def main() -> None:
             raise ValueError("--max-candidates must be positive")
         candidate_limit = min(candidate_limit, args.max_candidates)
     candidate_oids = np.empty(candidate_limit, dtype=np.int64)
-    candidate_index: dict[int, int] = {}
+    candidate_retrieval_ids = np.empty(candidate_limit, dtype=np.int64)
     loaded_candidates = 0
     for batch in candidate_dataset.scanner(columns=["item_oid", "retrieval_id"], batch_size=65536).to_batches():
         remaining = candidate_limit - loaded_candidates
@@ -83,14 +83,12 @@ def main() -> None:
             batch = batch.slice(0, remaining)
         for oid_value, retrieval_value in zip(batch.column(0).to_pylist(), batch.column(1).to_pylist()):
             oid = int(oid_value)
-            retrieval_id = int(retrieval_value)
-            if retrieval_id != loaded_candidates:
-                raise ValueError("eval candidate rows must be ordered by dense retrieval_id")
-            if oid in candidate_index:
-                raise ValueError("eval candidate contains duplicate item_oid")
             candidate_oids[loaded_candidates] = oid
-            candidate_index[oid] = loaded_candidates
+            candidate_retrieval_ids[loaded_candidates] = int(retrieval_value)
             loaded_candidates += 1
+    if loaded_candidates != candidate_limit:
+        raise AssertionError("did not load the requested number of evaluation candidates")
+    candidate_index = candidate_row_index(candidate_oids, candidate_retrieval_ids)
 
     mm_by_rid = np.lib.format.open_memmap(
         mm_rid_path, mode="w+", dtype=np.float32, shape=(max_rid + 1, mm_dim)
@@ -185,6 +183,8 @@ def main() -> None:
         "eval_candidate_count": candidate_limit,
         "eval_candidate_mm_valid_count": candidate_valid_count,
         "eval_candidate_mm_missing_count": candidate_limit - candidate_valid_count,
+        "eval_candidate_array_alignment": "physical row order of eval_candidates.parquet",
+        "retrieval_id_used_as_array_row": False,
         "missing_vector_storage": "zeros with separate valid mask",
         "l2_normalized": False,
         "source_scan_complete": args.max_items is None,

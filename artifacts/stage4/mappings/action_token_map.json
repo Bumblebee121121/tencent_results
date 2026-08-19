@@ -1,0 +1,8 @@
+{
+  "raw_to_token": {
+    "0": 1,
+    "1": 2,
+    "null_or_other": 3
+  },
+  "padding_token": 0
+}

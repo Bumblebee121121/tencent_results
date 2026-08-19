@@ -1,0 +1,93 @@
+{
+  "stage": "4.3",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "debug": false,
+  "row_count": 984141,
+  "train_scope_user_count": 967577,
+  "relevant_user_count": 984141,
+  "missing_user_feature_row_count": 0,
+  "fields": {
+    "103": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 86,
+      "missing_count": 833,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f103.npy"
+    },
+    "104": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 2,
+      "missing_count": 3690,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f104.npy"
+    },
+    "105": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 7,
+      "missing_count": 138681,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f105.npy"
+    },
+    "109": {
+      "field_type": "scalar",
+      "train_known_vocab_size": 3,
+      "missing_count": 343,
+      "oov_count": 0,
+      "list_length_min": null,
+      "list_length_max": null,
+      "list_length_mean": null,
+      "vocab_path": "mappings\\vocab\\user_f109.npy"
+    },
+    "106": {
+      "field_type": "list",
+      "train_known_vocab_size": 14,
+      "missing_count": 117761,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 8,
+      "list_length_mean": 1.737754041341637,
+      "vocab_path": "mappings\\vocab\\user_f106.npy"
+    },
+    "107": {
+      "field_type": "list",
+      "train_known_vocab_size": 19,
+      "missing_count": 601661,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 1,
+      "list_length_mean": 0.38864349722245084,
+      "vocab_path": "mappings\\vocab\\user_f107.npy"
+    },
+    "108": {
+      "field_type": "list",
+      "train_known_vocab_size": 4,
+      "missing_count": 815642,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 2,
+      "list_length_mean": 0.17196113158581952,
+      "vocab_path": "mappings\\vocab\\user_f108.npy"
+    },
+    "110": {
+      "field_type": "list",
+      "train_known_vocab_size": 2,
+      "missing_count": 559503,
+      "oov_count": 0,
+      "list_length_min": 0,
+      "list_length_max": 2,
+      "list_length_mean": 0.6890425254104848,
+      "vocab_path": "mappings\\vocab\\user_f110.npy"
+    }
+  },
+  "elapsed_seconds": 56.35774880000099
+}

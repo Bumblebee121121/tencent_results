@@ -1,0 +1,19 @@
+{
+  "stage": "4.5",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "debug": false,
+  "mm_dim": 32,
+  "mm_dtype": "float32",
+  "mm_valid_count": 4588438,
+  "mm_missing_count": 194716,
+  "eval_candidate_count": 815232,
+  "eval_candidate_mm_valid_count": 785668,
+  "eval_candidate_mm_missing_count": 29564,
+  "eval_candidate_array_alignment": "physical row order of eval_candidates.parquet",
+  "retrieval_id_used_as_array_row": false,
+  "missing_vector_storage": "zeros with separate valid mask",
+  "l2_normalized": false,
+  "source_scan_complete": true,
+  "elapsed_seconds": 273.7384977999973
+}

@@ -1,0 +1,8 @@
+2026-08-20 00:13:40,288 | INFO | log_path=D:\AI-file\tecent\logs\stage4\stage4_6_build_sequence_store.log
+2026-08-20 00:14:00,705 | INFO | written_users=157358
+2026-08-20 00:14:17,600 | INFO | written_users=312979
+2026-08-20 00:14:34,558 | INFO | written_users=470333
+2026-08-20 00:14:51,750 | INFO | written_users=631127
+2026-08-20 00:14:58,390 | INFO | written_users=787613
+2026-08-20 00:14:59,998 | INFO | written_users=943652
+2026-08-20 00:15:00,885 | INFO | wrote sequence events=90223574 users=1001845 elapsed_seconds=80.59

@@ -1,0 +1,9 @@
+2026-08-19 00:47:23,288 | INFO | log_path=D:\AI-file\tecent\logs\stage4\stage4_2_build_train_item_base.log
+2026-08-19 00:47:23,290 | INFO | input seq=D:\AI-file\tecent\data\TencentGR-1M\seq stage3_counts=D:\AI-file\tecent\artifacts\stage3\item_strength\item_train_counts.parquet cutoff=1747621423
+2026-08-19 00:47:26,042 | INFO | processed_users=157358 counted_train_events=11664424
+2026-08-19 00:47:26,426 | INFO | processed_users=312979 counted_train_events=23192398
+2026-08-19 00:47:26,838 | INFO | processed_users=470333 counted_train_events=34855906
+2026-08-19 00:47:27,248 | INFO | processed_users=631127 counted_train_events=46771796
+2026-08-19 00:47:27,603 | INFO | processed_users=787613 counted_train_events=58364278
+2026-08-19 00:47:27,965 | INFO | processed_users=943652 counted_train_events=69928850
+2026-08-19 00:47:28,911 | INFO | wrote counts=D:\AI-file\tecent\artifacts\stage4\mappings\train_item_count_by_rid.npy tokens=D:\AI-file\tecent\artifacts\stage4\mappings\rid_to_model_item_token.npy elapsed_seconds=5.62

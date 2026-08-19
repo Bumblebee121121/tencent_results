@@ -1,0 +1,278 @@
+{
+  "stage": "4.1",
+  "schema_version": 1,
+  "feature_protocol_version": "stage4_train_only_features_v1",
+  "stage3_protocol_version": "click_target_prefix_v2",
+  "stage3_train_cutoff": 1747621423,
+  "debug": false,
+  "schema_validation_passed": true,
+  "configured_user_scalar_features": [
+    "103",
+    "104",
+    "105",
+    "109"
+  ],
+  "configured_user_list_features": [
+    "106",
+    "107",
+    "108",
+    "110"
+  ],
+  "configured_item_features": [
+    "100",
+    "101",
+    "102",
+    "112",
+    "114",
+    "115",
+    "116",
+    "117",
+    "118",
+    "119",
+    "120",
+    "121",
+    "122"
+  ],
+  "item_rid_min": 1,
+  "item_rid_max": 4783154,
+  "item_rid_unique_count": 4783154,
+  "official_candidate_count_audited": 660000,
+  "candidate_oid_to_rid_coverage_count": 511029,
+  "candidate_oid_to_rid_coverage_ratio": 0.7742863636363636,
+  "retrieval_id_unique": true,
+  "retrieval_id_min": 0,
+  "retrieval_id_max": 659999,
+  "eval_candidate_count": 815232,
+  "eval_candidate_rid_null_count": 148971,
+  "candidate_item_compared_item_count": 511029,
+  "item_feat_rows_scanned_for_overlap": 4783154,
+  "candidate_item_mismatch_fields": [
+    "112",
+    "114",
+    "115",
+    "117",
+    "118",
+    "119",
+    "120"
+  ],
+  "feature_namespace_audit": {
+    "103": {
+      "size": 86,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "104": {
+      "size": 2,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "105": {
+      "size": 7,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "109": {
+      "size": 3,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "106": {
+      "size": 14,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "107": {
+      "size": 19,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "108": {
+      "size": 4,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "110": {
+      "size": 2,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "100": {
+      "size": 6,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "101": {
+      "size": 51,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "102": {
+      "size": 90709,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "112": {
+      "size": 30,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "114": {
+      "size": 20,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "115": {
+      "size": 691,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "116": {
+      "size": 18,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "117": {
+      "size": 497,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "118": {
+      "size": 1426,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "119": {
+      "size": 4191,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "120": {
+      "size": 3392,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "121": {
+      "size": 2135891,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    },
+    "122": {
+      "size": 90919,
+      "key_types": [
+        "int"
+      ],
+      "value_types": [
+        "int"
+      ],
+      "candidate_feature_value_normalization": "decimal string -> int64"
+    }
+  },
+  "source_precedence": {
+    "official_candidate": "candidate.feature_value",
+    "added_validation_or_test_target": "item_feat by historical RID"
+  },
+  "candidate_cold_start_used_as_model_feature": false,
+  "retrieval_id_is_model_embedding_id": false,
+  "retrieval_id_used_as_model_item_id": false,
+  "elapsed_seconds": 129.44663720000244
+}
