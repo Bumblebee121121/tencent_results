@@ -1,0 +1,60 @@
+data_root: data/TencentGR-1M
+stage3_root: artifacts/stage3
+stage4_root: artifacts/stage4
+output_root: artifacts/stage5
+log_root: logs/stage5
+
+recall_protocol_version: stage5_recall_baseline_v1
+stage3_protocol_version: click_target_prefix_v2
+stage4_protocol_version: stage4_train_only_features_v1
+seed: 42
+scan_batch_size: 8192
+recall_ks: [10, 50, 100, 500]
+ndcg_ks: [10, 50, 100]
+
+itemcf:
+  fit_window: 20
+  neighbor_topn: 500
+  pair_partitions: 256
+  pair_buffer_size: 1000000
+  experiments:
+    equal_all:
+      exposure_weight: 1.0
+      click_weight: 1.0
+      unknown_weight: 0.0
+      history_limit: null
+    click3_all:
+      exposure_weight: 1.0
+      click_weight: 3.0
+      unknown_weight: 0.0
+      history_limit: null
+    click3_recent20:
+      exposure_weight: 1.0
+      click_weight: 3.0
+      unknown_weight: 0.0
+      history_limit: 20
+
+two_tower:
+  embedding_dim: 64
+  batch_size: 2048
+  random_negatives: 20
+  epochs: 3
+  learning_rate: 0.01
+  max_history_length: null
+  num_workers: 0
+  validation_max_samples: 100000
+
+faiss:
+  index_type: hnsw_flat_ip
+  M: 32
+  efConstruction: 200
+  efSearch: 128
+  embedding_batch_size: 16384
+  query_batch_size: 2048
+
+debug:
+  max_users: 1000
+  max_train_samples: 10000
+  max_eval_samples: 1000
+  epochs: 1
+  pair_buffer_size: 50000

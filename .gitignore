@@ -25,3 +25,14 @@ artifacts/stage4/**/*.npy
 artifacts/stage4/**/*.parquet
 artifacts/stage4_debug/**/*.npy
 artifacts/stage4_debug/**/*.parquet
+
+# Stage 5 generated model/index/table artifacts
+artifacts/stage5/**/*.parquet
+artifacts/stage5/**/*.npy
+artifacts/stage5/**/*.pt
+artifacts/stage5/**/*.index
+artifacts/stage5_debug/**/*.parquet
+artifacts/stage5_debug/**/*.npy
+artifacts/stage5_debug/**/*.pt
+artifacts/stage5_debug/**/*.index
+artifacts/stage5_test_tmp/
