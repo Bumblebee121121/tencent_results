@@ -59,6 +59,8 @@ def main() -> None:
     hnsw_audit = load_json(hnsw_audit_path)
     if itemcf.get("recall_protocol_version") != config["recall_protocol_version"] or two_tower.get("recall_protocol_version") != config["recall_protocol_version"]:
         raise ValueError("baseline metrics protocol mismatch")
+    if "zero_user_vectors" not in two_tower:
+        raise ValueError("Two-Tower metrics are missing zero-user-vector accounting")
     if repeated_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
         raise ValueError("repeated-target audit protocol mismatch")
     if hnsw_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
@@ -119,6 +121,7 @@ def main() -> None:
             "best_itemcf_selected_on_validation": best_itemcf,
             "exclude_history_items": bool(config["retrieval"]["exclude_history_items"]),
             "hnsw_accuracy_audit_passed": True,
+            "two_tower_zero_user_vectors": two_tower.get("zero_user_vectors", {}),
             "all_stage5_tests_passed": tests_passed,
             "outputs": {
                 "itemcf_metrics": str(itemcf_metrics_path.relative_to(PROJECT_ROOT)),

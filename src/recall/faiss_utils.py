@@ -55,6 +55,22 @@ def filter_history_from_faiss_rows(
     return result
 
 
+def search_nonzero_queries(index, queries: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
+    """Search only nonzero queries; return -1 rows for zero-vector samples."""
+
+    values = np.ascontiguousarray(queries, dtype=np.float32)
+    if values.ndim != 2:
+        raise ValueError("queries must be a matrix")
+    if k <= 0:
+        raise ValueError("k must be positive")
+    nonzero = np.linalg.norm(values, axis=1) > 0
+    retrieved = np.full((values.shape[0], int(k)), -1, dtype=np.int64)
+    if np.any(nonzero):
+        _, valid_rows = index.search(values[nonzero], int(k))
+        retrieved[nonzero] = valid_rows
+    return retrieved, nonzero
+
+
 def hnsw_retrieval_recall(
     approximate_rows: np.ndarray,
     exact_rows: np.ndarray,

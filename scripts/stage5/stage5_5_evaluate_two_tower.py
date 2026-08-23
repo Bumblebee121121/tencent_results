@@ -24,7 +24,7 @@ from src.models.vanilla_two_tower import VanillaTwoTower
 from src.recall.checkpoint import load_checkpoint
 from src.recall.data import ParquetSampleIterableDataset, Stage5SequenceStore, TwoTowerCollator
 from src.recall.evaluation import metrics_from_ranks
-from src.recall.faiss_utils import filter_history_from_faiss_rows
+from src.recall.faiss_utils import filter_history_from_faiss_rows, search_nonzero_queries
 from src.recall.runtime import (
     Timer, add_common_arguments, configure_logging, guard_outputs, load_config,
     load_json, require_contracts, require_paths, save_json, select_device, stage5_paths,
@@ -58,6 +58,7 @@ def evaluate_split(
     writer = pq.ParquetWriter(output_path, RANK_SCHEMA, compression="snappy")
     ranks: list[int | None] = []
     groups: list[str] = []
+    zero_user_vector_count = 0
     max_k = max(map(int, config["recall_ks"]))
     try:
         with torch.no_grad():
@@ -72,13 +73,16 @@ def evaluate_split(
                     if exclude_history_items else 0
                 )
                 search_k = min(int(index.ntotal), max_k + largest_history)
-                _, retrieved = index.search(query, search_k)
+                retrieved, nonzero_queries = search_nonzero_queries(index, query, search_k)
+                zero_user_vector_count += int(np.count_nonzero(~nonzero_queries))
                 output_rows = []
-                for row, history, faiss_rows in zip(batch["rows"], histories, retrieved):
+                for row, history, faiss_rows, query_is_nonzero in zip(
+                    batch["rows"], histories, retrieved, nonzero_queries
+                ):
                     target_rid = int(row["target_item_rid"])
                     count = int(store.train_counts[target_rid]) if 0 < target_rid < store.train_counts.size else 0
                     group = classify_strength(count, p50, p90)
-                    if group == "Unseen":
+                    if not query_is_nonzero or group == "Unseen":
                         rank = None
                     else:
                         ranking = filter_history_from_faiss_rows(
@@ -95,7 +99,14 @@ def evaluate_split(
                 writer.write_table(pa.Table.from_pylist(output_rows, schema=RANK_SCHEMA))
     finally:
         writer.close()
-    return metrics_from_ranks(ranks, groups, config["recall_ks"], config["ndcg_ks"])
+    return (
+        metrics_from_ranks(ranks, groups, config["recall_ks"], config["ndcg_ks"]),
+        {
+            "sample_count": len(ranks),
+            "zero_user_vector_count": zero_user_vector_count,
+            "zero_user_vector_ratio": zero_user_vector_count / len(ranks) if ranks else 0.0,
+        },
+    )
 
 
 def main() -> None:
@@ -151,9 +162,10 @@ def main() -> None:
     p50, p90 = float(contracts["stage4"]["p50_train"]), float(contracts["stage4"]["p90_train"])
     exclude_history_items = bool(config["retrieval"]["exclude_history_items"])
     metrics = {}
+    zero_user_vectors = {}
     for split, filename in (("validation", "val_primary.parquet"), ("test", "test_primary.parquet")):
         logger.info("evaluating split=%s", split)
-        metrics[split] = evaluate_split(
+        metrics[split], zero_user_vectors[split] = evaluate_split(
             stage3_root / "samples" / filename, rank_paths[split], model, index, indexed_rids,
             store, config, device, max_samples, p50, p90, exclude_history_items,
         )
@@ -163,6 +175,8 @@ def main() -> None:
          "exclude_history_items": exclude_history_items,
          "repeated_target_audit": str(repeated_audit_path.relative_to(PROJECT_ROOT)),
          "hnsw_accuracy_audit": str(hnsw_audit_path.relative_to(PROJECT_ROOT)),
+         "zero_user_vector_policy": "target_rank is null; sample remains in evaluation denominator; query is not sent to FAISS",
+         "zero_user_vectors": zero_user_vectors,
          "metrics": metrics, "elapsed_seconds": timer.elapsed_seconds},
         metrics_path, args.overwrite,
     )

@@ -4,6 +4,8 @@ Stage 5 的流水线入口和两个协议审计入口统一位于 `scripts/stage
 
 当前协议为 `stage5_recall_baseline_v2`：历史中的 PAD=0 和 UNK=1 都不参与 User Tower 平均池化；训练负样本池只由 `train_item_count > 0` 的全体 Train-Seen item 构成；Stage 3 没有禁止 repeated target，因此 ItemCF 和 Two-Tower 默认不会过滤历史 item。
 
+如果忽略 PAD/UNK 后某个 Validation/Test 用户历史没有任何 Train-Seen item，该样本不会以零向量查询 FAISS；其 `target_rank` 记为空、继续保留在评估分母，并在 Two-Tower metrics 与 Stage 5 manifest 中报告数量和比例。
+
 先运行测试：
 
 ```bat

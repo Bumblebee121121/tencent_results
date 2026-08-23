@@ -65,7 +65,10 @@ def run_epoch(model, loader, device, optimizer=None) -> tuple[float, int]:
 def make_loader(path, store, candidate_tokens, section, seed, max_rows, validation=False):
     sampler = UniformNegativeSampler(candidate_tokens, int(section["random_negatives"]), seed)
     max_history = section.get("max_history_length")
-    collator = TwoTowerCollator(store, sampler, None if max_history is None else int(max_history))
+    collator = TwoTowerCollator(
+        store, sampler, None if max_history is None else int(max_history),
+        require_seen_target=True,
+    )
     dataset = ParquetSampleIterableDataset(path, max_rows=max_rows)
     return DataLoader(
         dataset, batch_size=int(section["batch_size"]), collate_fn=collator,
@@ -154,6 +157,7 @@ def main() -> None:
             "device": str(device), "num_item_tokens": num_tokens,
             "negative_pool_scope": "all items with train_item_count > 0; independent of eval candidate membership",
             "train_seen_negative_pool_count": int(negative_pool_tokens.size),
+            "validation_loss_target_scope": "Train-Seen targets only (model_item_token > UNK); Train-Unseen validation targets are excluded",
             "best_epoch": best_epoch, "best_validation_loss": best_loss, "debug": bool(args.debug),
             "elapsed_seconds": timer.elapsed_seconds,
         },

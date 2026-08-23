@@ -7,11 +7,30 @@ import numpy as np
 from src.recall.evaluation import complementarity_from_ranks, metrics_from_ranks
 from src.recall.faiss_utils import (
     build_hnsw_ip, filter_history_from_faiss_rows, hnsw_retrieval_recall,
-    train_seen_candidate_rows,
+    search_nonzero_queries, train_seen_candidate_rows,
 )
 
 
 class FaissEvaluationTest(unittest.TestCase):
+    def test_zero_user_vector_is_not_sent_to_faiss(self):
+        class RecordingIndex:
+            def __init__(self):
+                self.received = None
+
+            def search(self, queries, k):
+                self.received = queries.copy()
+                return np.zeros((len(queries), k), dtype=np.float32), np.tile(
+                    np.arange(k, dtype=np.int64), (len(queries), 1)
+                )
+
+        index = RecordingIndex()
+        queries = np.array([[0.0, 0.0], [1.0, 0.0]], dtype=np.float32)
+        rows, nonzero = search_nonzero_queries(index, queries, 2)
+        self.assertEqual([[1.0, 0.0]], index.received.tolist())
+        self.assertEqual([False, True], nonzero.tolist())
+        self.assertEqual([-1, -1], rows[0].tolist())
+        self.assertEqual([0, 1], rows[1].tolist())
+
     def test_unseen_exclusion_and_physical_row_alignment(self):
         rows = [
             {"item_oid": 10, "item_rid": 1, "retrieval_id": 99},
