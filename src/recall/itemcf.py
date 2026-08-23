@@ -344,13 +344,14 @@ def retrieve_itemcf(
     click_weight: float,
     unknown_weight: float,
     history_limit: int | None,
+    exclude_history_items: bool = False,
 ) -> list[int]:
     items = np.asarray(history_rids, dtype=np.int64)
     actions = np.asarray(history_actions, dtype=np.int8)
     if history_limit is not None:
         items, actions = items[-history_limit:], actions[-history_limit:]
     weights = action_weights(actions, exposure_weight, click_weight, unknown_weight)
-    interacted = set(map(int, history_rids))
+    interacted = set(map(int, history_rids)) if exclude_history_items else set()
     scores: dict[int, float] = defaultdict(float)
     for seed, weight in zip(items, weights):
         if weight <= 0:

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pyarrow as pa
@@ -9,6 +10,7 @@ import pyarrow.parquet as pq
 
 from src.recall.data import (
     ParquetSampleIterableDataset, Stage5SequenceStore, TwoTowerCollator, UniformNegativeSampler,
+    train_seen_item_tokens,
 )
 from tests.stage5._temp import workspace_tempdir
 
@@ -28,6 +30,13 @@ def make_store(root: Path) -> Stage5SequenceStore:
 
 
 class StreamingDataTest(unittest.TestCase):
+    def test_negative_pool_uses_train_counts_not_eval_candidate_membership(self):
+        store = SimpleNamespace(
+            train_counts=np.array([0, 2, 0, 4], dtype=np.int64),
+            rid_to_token=np.array([1, 2, 1, 4], dtype=np.int32),
+        )
+        self.assertEqual([2, 4], train_seen_item_tokens(store).tolist())
+
     def test_strict_prefix_collation_and_negative_exclusion(self):
         with workspace_tempdir() as temporary:
             store = make_store(temporary)
@@ -41,6 +50,7 @@ class StreamingDataTest(unittest.TestCase):
             self.assertEqual([[2, 3]], batch["history_tokens"].tolist())
             self.assertEqual([4], batch["target_tokens"].tolist())
             self.assertTrue(set(batch["negative_tokens"][0].tolist()).isdisjoint({2, 3, 4}))
+            self.assertEqual([2, 3, 4, 5, 6], train_seen_item_tokens(store).tolist())
             bad = dict(row, target_timestamp=20)
             with self.assertRaises(ValueError):
                 store.history(bad)

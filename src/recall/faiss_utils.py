@@ -36,9 +36,13 @@ def build_hnsw_ip(embeddings: np.ndarray, m: int, ef_construction: int, ef_searc
 
 
 def filter_history_from_faiss_rows(
-    retrieved_rows: Sequence[int], indexed_item_rids: np.ndarray, history_rids: Sequence[int], max_k: int
+    retrieved_rows: Sequence[int],
+    indexed_item_rids: np.ndarray,
+    history_rids: Sequence[int],
+    max_k: int,
+    exclude_history_items: bool = False,
 ) -> list[int]:
-    history = set(map(int, history_rids))
+    history = set(map(int, history_rids)) if exclude_history_items else set()
     result = []
     for row in retrieved_rows:
         if int(row) < 0:
@@ -49,3 +53,32 @@ def filter_history_from_faiss_rows(
             if len(result) == max_k:
                 break
     return result
+
+
+def hnsw_retrieval_recall(
+    approximate_rows: np.ndarray,
+    exact_rows: np.ndarray,
+    ks: Sequence[int],
+) -> dict[str, dict[str, float | int]]:
+    """Measure ANN Top-K set recall against exact Inner Product Top-K."""
+
+    approximate = np.asarray(approximate_rows)
+    exact = np.asarray(exact_rows)
+    if approximate.shape != exact.shape or approximate.ndim != 2:
+        raise ValueError("approximate and exact row matrices must have equal 2-D shape")
+    output: dict[str, dict[str, float | int]] = {}
+    for k in sorted(set(map(int, ks))):
+        if k <= 0 or k > approximate.shape[1]:
+            raise ValueError("audit K is outside the retrieved width")
+        values = np.asarray(
+            [len(set(map(int, left[:k])) & set(map(int, right[:k]))) / k for left, right in zip(approximate, exact)],
+            dtype=np.float64,
+        )
+        output[f"@{k}"] = {
+            "query_count": int(values.size),
+            "mean_recall": float(values.mean()) if values.size else 0.0,
+            "p05_recall": float(np.quantile(values, 0.05)) if values.size else 0.0,
+            "median_recall": float(np.median(values)) if values.size else 0.0,
+            "minimum_recall": float(values.min()) if values.size else 0.0,
+        }
+    return output

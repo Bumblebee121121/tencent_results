@@ -4,13 +4,17 @@ stage4_root: artifacts/stage4
 output_root: artifacts/stage5
 log_root: logs/stage5
 
-recall_protocol_version: stage5_recall_baseline_v1
+recall_protocol_version: stage5_recall_baseline_v2
 stage3_protocol_version: click_target_prefix_v2
 stage4_protocol_version: stage4_train_only_features_v1
 seed: 42
 scan_batch_size: 8192
 recall_ks: [10, 50, 100, 500]
 ndcg_ks: [10, 50, 100]
+
+retrieval:
+  # Stage 3 does not define previously seen items as invalid targets. Keep them eligible.
+  exclude_history_items: false
 
 itemcf:
   fit_window: 20
@@ -52,9 +56,21 @@ faiss:
   embedding_batch_size: 16384
   query_batch_size: 2048
 
+hnsw_accuracy_audit:
+  split: validation_primary
+  sample_size: 1000
+  ks: [10, 50, 100, 500]
+  minimum_mean_recall:
+    10: 0.95
+    50: 0.95
+    100: 0.95
+    500: 0.90
+
 debug:
   max_users: 1000
   max_train_samples: 10000
   max_eval_samples: 1000
   epochs: 1
   pair_buffer_size: 50000
+  repeated_target_max_samples: 10000
+  hnsw_audit_samples: 100

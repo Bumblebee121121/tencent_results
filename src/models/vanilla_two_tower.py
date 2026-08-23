@@ -8,9 +8,18 @@ from torch.nn import functional as F
 
 
 class VanillaTwoTower(nn.Module):
-    def __init__(self, num_item_tokens: int, embedding_dim: int = 64, padding_idx: int = 0):
+    def __init__(
+        self,
+        num_item_tokens: int,
+        embedding_dim: int = 64,
+        padding_idx: int = 0,
+        unknown_idx: int = 1,
+    ):
         super().__init__()
         self.padding_idx = int(padding_idx)
+        self.unknown_idx = int(unknown_idx)
+        if self.padding_idx == self.unknown_idx:
+            raise ValueError("PAD and UNK token IDs must be distinct")
         self.item_embedding = nn.Embedding(
             int(num_item_tokens), int(embedding_dim), padding_idx=self.padding_idx, sparse=True
         )
@@ -19,7 +28,8 @@ class VanillaTwoTower(nn.Module):
             self.item_embedding.weight[self.padding_idx].zero_()
 
     def encode_user(self, history_tokens: torch.Tensor) -> torch.Tensor:
-        mask = history_tokens.ne(self.padding_idx)
+        # Pure-ID Stage 5 has no reliable learning signal for the shared UNK embedding.
+        mask = history_tokens.ne(self.padding_idx) & history_tokens.ne(self.unknown_idx)
         embedded = self.item_embedding(history_tokens)
         pooled = (embedded * mask.unsqueeze(-1)).sum(dim=1)
         denominator = mask.sum(dim=1, keepdim=True).clamp_min(1)

@@ -42,7 +42,10 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def evaluate_split(path, output_path, store, lookup, experiment, recall_ks, ndcg_ks, max_samples, p50, p90):
+def evaluate_split(
+    path, output_path, store, lookup, experiment, recall_ks, ndcg_ks,
+    max_samples, p50, p90, exclude_history_items,
+):
     writer = pq.ParquetWriter(output_path, RANK_SCHEMA, compression="snappy")
     ranks: list[int | None] = []
     groups: list[str] = []
@@ -59,6 +62,7 @@ def evaluate_split(path, output_path, store, lookup, experiment, recall_ks, ndcg
                     history.item_rid, history.action_token, lookup, max(recall_ks),
                     float(experiment["exposure_weight"]), float(experiment["click_weight"]),
                     float(experiment["unknown_weight"]), experiment.get("history_limit"),
+                    exclude_history_items=exclude_history_items,
                 )
                 target_rid = int(row["target_item_rid"])
                 rank = ranking.index(target_rid) + 1 if target_rid in ranking else None
@@ -88,7 +92,14 @@ def main() -> None:
     contracts = require_contracts(stage3_root, stage4_root, config)
     timer = Timer()
     itemcf_root = output_root / "itemcf"
-    require_paths([itemcf_root / "manifest.json", itemcf_root / "item_neighbors.parquet"])
+    repeated_audit_path = output_root / "audits" / "repeated_target_audit.json"
+    require_paths([itemcf_root / "manifest.json", itemcf_root / "item_neighbors.parquet", repeated_audit_path])
+    with repeated_audit_path.open("r", encoding="utf-8") as handle:
+        repeated_audit = json.load(handle)
+    if repeated_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
+        raise ValueError("repeated-target audit protocol mismatch")
+    if bool(repeated_audit["retrieval_policy"]["exclude_history_items"]) != bool(config["retrieval"]["exclude_history_items"]):
+        raise ValueError("repeated-target audit retrieval policy mismatch")
     with (itemcf_root / "manifest.json").open("r", encoding="utf-8") as handle:
         build_manifest = json.load(handle)
     if build_manifest.get("recall_protocol_version") != config["recall_protocol_version"]:
@@ -104,6 +115,7 @@ def main() -> None:
     if args.debug and max_samples is None:
         max_samples = int(config["debug"]["max_eval_samples"])
     store = Stage5SequenceStore(stage4_root)
+    exclude_history_items = bool(config["retrieval"]["exclude_history_items"])
     p50 = float(contracts["stage4"]["p50_train"])
     p90 = float(contracts["stage4"]["p90_train"])
     metrics = {}
@@ -122,10 +134,13 @@ def main() -> None:
             metrics[name][split] = evaluate_split(
                 path, ranks_root / f"{name}_{split}.parquet", store, lookup, experiment,
                 config["recall_ks"], config["ndcg_ks"], max_samples, p50, p90,
+                exclude_history_items,
             )
     save_json(
         {"stage": "5.2", "schema_version": 1, "recall_protocol_version": config["recall_protocol_version"],
-         "debug": bool(args.debug), "metrics": metrics, "elapsed_seconds": timer.elapsed_seconds},
+         "debug": bool(args.debug), "exclude_history_items": exclude_history_items,
+         "repeated_target_audit": str(repeated_audit_path.relative_to(PROJECT_ROOT)),
+         "metrics": metrics, "elapsed_seconds": timer.elapsed_seconds},
         metrics_path, args.overwrite,
     )
     logger.info("ItemCF evaluation complete elapsed_seconds=%.2f", timer.elapsed_seconds)

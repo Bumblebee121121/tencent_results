@@ -46,7 +46,15 @@ class ItemCFTest(unittest.TestCase):
             self.assertFalse(any(row["neighbor_item_rid"] == 30 for row in rows))
             lookup = NeighborShardLookup(root / "shards", "click3", 2)
             self.assertEqual([20], retrieve_itemcf([10], [1], lookup, 5, 1, 3, 0, None))
-            self.assertEqual([], retrieve_itemcf([10, 20], [1, 2], lookup, 5, 1, 3, 0, None))
+            # Repeated historical items remain legal targets by default.
+            self.assertEqual([20], retrieve_itemcf([10, 20], [1, 2], lookup, 5, 1, 3, 0, None))
+            self.assertEqual(
+                [],
+                retrieve_itemcf(
+                    [10, 20], [1, 2], lookup, 5, 1, 3, 0, None,
+                    exclude_history_items=True,
+                ),
+            )
             del lookup
 
 

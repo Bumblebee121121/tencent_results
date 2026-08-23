@@ -151,7 +151,13 @@ def candidate_table(stage3_root: Path):
     return ds.dataset(Path(stage3_root) / "candidates" / "eval_candidates.parquet", format="parquet").to_table()
 
 
-def train_seen_candidate_tokens(stage3_root: Path, store: Stage5SequenceStore) -> np.ndarray:
-    rids = candidate_table(stage3_root).column("item_rid").to_pylist()
-    tokens = [store.target_token(rid) for rid in rids]
-    return np.unique(np.asarray([token for token in tokens if token > 1], dtype=np.int64))
+def train_seen_item_tokens(store: Stage5SequenceStore) -> np.ndarray:
+    """Build the negative pool only from train-period counts, independent of eval candidates."""
+
+    train_seen_rids = np.flatnonzero(np.asarray(store.train_counts) > 0)
+    tokens = np.asarray(store.rid_to_token[train_seen_rids], dtype=np.int64)
+    if tokens.size == 0 or np.any(tokens <= 1):
+        raise ValueError("train-seen RID/token mapping is inconsistent")
+    if np.unique(tokens).size != tokens.size:
+        raise ValueError("train-seen item tokens must be one-to-one")
+    return tokens

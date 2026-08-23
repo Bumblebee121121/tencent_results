@@ -1,0 +1,39 @@
+{
+  "stage": "5.0",
+  "schema_version": 1,
+  "recall_protocol_version": "stage5_recall_baseline_v2",
+  "stage3_protocol_version": "click_target_prefix_v2",
+  "debug": false,
+  "definition": "target_item_rid occurs at least once in seq[:history_end_position]",
+  "retrieval_policy": {
+    "exclude_history_items": false,
+    "reason": "Stage 3 does not declare repeated historical items invalid targets"
+  },
+  "splits": {
+    "train": {
+      "sample_count": 6949073,
+      "repeated_target_count": 15191,
+      "repeated_target_ratio": 0.0021860469734596255,
+      "train_seen_repeated_target_count": 15191,
+      "nonmonotonic_history_rows": 0,
+      "scan_method": "incremental per-user history set; exact fallback reset on nonmonotonic history_end_position"
+    },
+    "validation_primary": {
+      "sample_count": 456206,
+      "repeated_target_count": 1468,
+      "repeated_target_ratio": 0.0032178445702160867,
+      "train_seen_repeated_target_count": 1456,
+      "nonmonotonic_history_rows": 0,
+      "scan_method": "incremental per-user history set; exact fallback reset on nonmonotonic history_end_position"
+    },
+    "test_primary": {
+      "sample_count": 370673,
+      "repeated_target_count": 945,
+      "repeated_target_ratio": 0.002549416871474318,
+      "train_seen_repeated_target_count": 850,
+      "nonmonotonic_history_rows": 0,
+      "scan_method": "incremental per-user history set; exact fallback reset on nonmonotonic history_end_position"
+    }
+  },
+  "elapsed_seconds": 540.922
+}

@@ -18,7 +18,7 @@ from src.models.vanilla_two_tower import VanillaTwoTower
 from src.recall.checkpoint import save_checkpoint
 from src.recall.data import (
     ParquetSampleIterableDataset, Stage5SequenceStore, TwoTowerCollator,
-    UniformNegativeSampler, train_seen_candidate_tokens,
+    UniformNegativeSampler, train_seen_item_tokens,
 )
 from src.recall.runtime import (
     Timer, add_common_arguments, configure_logging, guard_outputs, load_config,
@@ -98,13 +98,13 @@ def main() -> None:
     manifest_path = root / "training_manifest.json"
     guard_outputs([checkpoint_path, history_path, manifest_path], args.overwrite)
     store = Stage5SequenceStore(stage4_root)
-    candidate_tokens = train_seen_candidate_tokens(stage3_root, store)
+    negative_pool_tokens = train_seen_item_tokens(store)
     num_tokens = int(store.rid_to_token.size + 1)
     model = VanillaTwoTower(num_tokens, int(section["embedding_dim"])).to(device)
     optimizer = torch.optim.SparseAdam(model.parameters(), lr=float(section["learning_rate"]))
     logger.info(
-        "device=%s item_tokens=%d train_seen_candidates=%d epochs=%d",
-        device, num_tokens, candidate_tokens.size, epochs,
+        "device=%s item_tokens=%d train_seen_negative_pool=%d epochs=%d",
+        device, num_tokens, negative_pool_tokens.size, epochs,
     )
     history_rows = []
     best_loss = float("inf")
@@ -117,13 +117,13 @@ def main() -> None:
     }
     for epoch in range(1, epochs + 1):
         train_loader = make_loader(
-            stage3_root / "samples" / "train_samples.parquet", store, candidate_tokens,
+            stage3_root / "samples" / "train_samples.parquet", store, negative_pool_tokens,
             section, seed + epoch, max_train,
         )
         train_loss, train_count = run_epoch(model, train_loader, device, optimizer)
         # Recreate both sampler and loader with the same seed every epoch: validation loss is fixed.
         validation_loader = make_loader(
-            stage3_root / "samples" / "val_primary.parquet", store, candidate_tokens,
+            stage3_root / "samples" / "val_primary.parquet", store, negative_pool_tokens,
             section, seed + 100000, max_validation, validation=True,
         )
         validation_loss, validation_count = run_epoch(model, validation_loader, device)
@@ -150,7 +150,10 @@ def main() -> None:
             "framework": "pytorch", "model": "VanillaTwoTower", "shared_item_embedding": True,
             "inputs": ["history_item_token", "target_or_negative_item_token"],
             "excluded_inputs": ["action", "timestamp", "side", "multimodal", "strength"],
-            "device": str(device), "num_item_tokens": num_tokens, "train_seen_candidate_count": int(candidate_tokens.size),
+            "history_pooling_ignored_tokens": {"PAD": 0, "UNK": 1},
+            "device": str(device), "num_item_tokens": num_tokens,
+            "negative_pool_scope": "all items with train_item_count > 0; independent of eval candidate membership",
+            "train_seen_negative_pool_count": int(negative_pool_tokens.size),
             "best_epoch": best_epoch, "best_validation_loss": best_loss, "debug": bool(args.debug),
             "elapsed_seconds": timer.elapsed_seconds,
         },

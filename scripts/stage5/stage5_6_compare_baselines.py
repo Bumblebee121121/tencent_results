@@ -49,12 +49,22 @@ def main() -> None:
     report_path = output_root / "reports" / "recall_comparison.csv"
     complementarity_path = output_root / "reports" / "channel_complementarity.json"
     manifest_path = output_root / "manifests" / "stage5_manifest.json"
-    require_paths([itemcf_metrics_path, two_tower_metrics_path])
+    repeated_audit_path = output_root / "audits" / "repeated_target_audit.json"
+    hnsw_audit_path = output_root / "audits" / "hnsw_accuracy_audit.json"
+    require_paths([itemcf_metrics_path, two_tower_metrics_path, repeated_audit_path, hnsw_audit_path])
     guard_outputs([report_path, complementarity_path, manifest_path], args.overwrite)
     itemcf = load_json(itemcf_metrics_path)
     two_tower = load_json(two_tower_metrics_path)
+    repeated_audit = load_json(repeated_audit_path)
+    hnsw_audit = load_json(hnsw_audit_path)
     if itemcf.get("recall_protocol_version") != config["recall_protocol_version"] or two_tower.get("recall_protocol_version") != config["recall_protocol_version"]:
         raise ValueError("baseline metrics protocol mismatch")
+    if repeated_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
+        raise ValueError("repeated-target audit protocol mismatch")
+    if hnsw_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
+        raise ValueError("HNSW accuracy audit protocol mismatch")
+    if not bool(hnsw_audit.get("passed")):
+        raise ValueError("HNSW accuracy audit did not pass configured retrieval-recall thresholds")
 
     rows = []
     metric_sets = {f"itemcf:{name}": splits for name, splits in itemcf["metrics"].items()}
@@ -107,12 +117,16 @@ def main() -> None:
             "stage4_protocol_version": config["stage4_protocol_version"], "debug": bool(args.debug),
             "frameworks": {"two_tower": "PyTorch", "ann": "FAISS CPU HNSW-IP", "itemcf": "NumPy/PyArrow"},
             "best_itemcf_selected_on_validation": best_itemcf,
+            "exclude_history_items": bool(config["retrieval"]["exclude_history_items"]),
+            "hnsw_accuracy_audit_passed": True,
             "all_stage5_tests_passed": tests_passed,
             "outputs": {
                 "itemcf_metrics": str(itemcf_metrics_path.relative_to(PROJECT_ROOT)),
                 "two_tower_metrics": str(two_tower_metrics_path.relative_to(PROJECT_ROOT)),
                 "recall_comparison": str(report_path.relative_to(PROJECT_ROOT)),
                 "channel_complementarity": str(complementarity_path.relative_to(PROJECT_ROOT)),
+                "repeated_target_audit": str(repeated_audit_path.relative_to(PROJECT_ROOT)),
+                "hnsw_accuracy_audit": str(hnsw_audit_path.relative_to(PROJECT_ROOT)),
             },
             "elapsed_seconds": timer.elapsed_seconds,
         },

@@ -5,7 +5,10 @@ import unittest
 import numpy as np
 
 from src.recall.evaluation import complementarity_from_ranks, metrics_from_ranks
-from src.recall.faiss_utils import build_hnsw_ip, filter_history_from_faiss_rows, train_seen_candidate_rows
+from src.recall.faiss_utils import (
+    build_hnsw_ip, filter_history_from_faiss_rows, hnsw_retrieval_recall,
+    train_seen_candidate_rows,
+)
 
 
 class FaissEvaluationTest(unittest.TestCase):
@@ -25,8 +28,19 @@ class FaissEvaluationTest(unittest.TestCase):
         embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
         index = build_hnsw_ip(embeddings, 4, 20, 20)
         _, rows = index.search(np.array([[1, 0]], dtype=np.float32), 3)
-        ranking = filter_history_from_faiss_rows(rows[0], np.array([10, 20, 30]), [10], 2)
-        self.assertEqual(20, ranking[0])
+        allowed = filter_history_from_faiss_rows(rows[0], np.array([10, 20, 30]), [10], 2)
+        filtered = filter_history_from_faiss_rows(
+            rows[0], np.array([10, 20, 30]), [10], 2, exclude_history_items=True
+        )
+        self.assertEqual(10, allowed[0])
+        self.assertEqual(20, filtered[0])
+
+    def test_hnsw_retrieval_recall_matches_set_overlap(self):
+        approximate = np.array([[1, 2, 9, 8], [5, 6, 7, 8]])
+        exact = np.array([[1, 2, 3, 4], [5, 9, 7, 0]])
+        metrics = hnsw_retrieval_recall(approximate, exact, [2, 4])
+        self.assertAlmostEqual(0.75, metrics["@2"]["mean_recall"])
+        self.assertAlmostEqual(0.5, metrics["@4"]["mean_recall"])
 
     def test_group_metrics_unseen_denominator_and_complementarity(self):
         metrics = metrics_from_ranks([1, None, 50], ["Head", "Unseen", "Tail"], [10, 50], [10])

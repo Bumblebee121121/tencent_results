@@ -27,7 +27,7 @@ from src.recall.evaluation import metrics_from_ranks
 from src.recall.faiss_utils import filter_history_from_faiss_rows
 from src.recall.runtime import (
     Timer, add_common_arguments, configure_logging, guard_outputs, load_config,
-    require_contracts, require_paths, save_json, select_device, stage5_paths,
+    load_json, require_contracts, require_paths, save_json, select_device, stage5_paths,
 )
 
 
@@ -48,7 +48,10 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def evaluate_split(path, output_path, model, index, indexed_rids, store, config, device, max_samples, p50, p90):
+def evaluate_split(
+    path, output_path, model, index, indexed_rids, store, config, device,
+    max_samples, p50, p90, exclude_history_items,
+):
     dataset = ParquetSampleIterableDataset(path, max_rows=max_samples)
     collator = TwoTowerCollator(store, negative_sampler=None, require_seen_target=False)
     loader = DataLoader(dataset, batch_size=int(config["faiss"]["query_batch_size"]), collate_fn=collator, num_workers=0)
@@ -64,7 +67,10 @@ def evaluate_split(path, output_path, model, index, indexed_rids, store, config,
                 history_tokens = batch["history_tokens"].to(device)
                 query = np.ascontiguousarray(model.encode_user(history_tokens).cpu().numpy(), dtype=np.float32)
                 histories = [store.history(row).item_rid for row in batch["rows"]]
-                largest_history = max((len(set(map(int, values))) for values in histories), default=0)
+                largest_history = (
+                    max((len(set(map(int, values))) for values in histories), default=0)
+                    if exclude_history_items else 0
+                )
                 search_k = min(int(index.ntotal), max_k + largest_history)
                 _, retrieved = index.search(query, search_k)
                 output_rows = []
@@ -75,7 +81,10 @@ def evaluate_split(path, output_path, model, index, indexed_rids, store, config,
                     if group == "Unseen":
                         rank = None
                     else:
-                        ranking = filter_history_from_faiss_rows(faiss_rows, indexed_rids, history, max_k)
+                        ranking = filter_history_from_faiss_rows(
+                            faiss_rows, indexed_rids, history, max_k,
+                            exclude_history_items=exclude_history_items,
+                        )
                         rank = ranking.index(target_rid) + 1 if target_rid in ranking else None
                     ranks.append(rank)
                     groups.append(group)
@@ -97,13 +106,31 @@ def main() -> None:
     contracts = require_contracts(stage3_root, stage4_root, config)
     timer = Timer()
     root = output_root / "two_tower"
-    required = [root / "checkpoints" / "best.pt", root / "faiss.index", root / "indexed_candidates.parquet", root / "index_manifest.json"]
+    repeated_audit_path = output_root / "audits" / "repeated_target_audit.json"
+    hnsw_audit_path = output_root / "audits" / "hnsw_accuracy_audit.json"
+    required = [
+        root / "checkpoints" / "best.pt", root / "faiss.index",
+        root / "indexed_candidates.parquet", root / "index_manifest.json",
+        repeated_audit_path, hnsw_audit_path,
+    ]
     require_paths(required)
+    repeated_audit = load_json(repeated_audit_path)
+    if repeated_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
+        raise ValueError("repeated-target audit protocol mismatch")
+    if bool(repeated_audit["retrieval_policy"]["exclude_history_items"]) != bool(config["retrieval"]["exclude_history_items"]):
+        raise ValueError("repeated-target audit retrieval policy mismatch")
+    hnsw_audit = load_json(hnsw_audit_path)
+    if hnsw_audit.get("recall_protocol_version") != config["recall_protocol_version"]:
+        raise ValueError("HNSW accuracy audit protocol mismatch")
+    if not bool(hnsw_audit.get("passed")):
+        raise ValueError("HNSW accuracy audit did not pass configured retrieval-recall thresholds")
     metrics_path = root / "metrics.json"
     rank_paths = {split: root / "ranks" / f"{split}.parquet" for split in ("validation", "test")}
     guard_outputs([metrics_path, *rank_paths.values()], args.overwrite)
     store = Stage5SequenceStore(stage4_root)
     checkpoint = load_checkpoint(required[0], map_location="cpu")
+    if checkpoint["protocols"].get("recall") != config["recall_protocol_version"]:
+        raise ValueError("checkpoint recall protocol mismatch")
     section = checkpoint["config"]["two_tower"]
     model = VanillaTwoTower(store.rid_to_token.size + 1, int(section["embedding_dim"]))
     model.load_state_dict(checkpoint["model"])
@@ -122,16 +149,20 @@ def main() -> None:
     if args.debug and max_samples is None:
         max_samples = int(config["debug"]["max_eval_samples"])
     p50, p90 = float(contracts["stage4"]["p50_train"]), float(contracts["stage4"]["p90_train"])
+    exclude_history_items = bool(config["retrieval"]["exclude_history_items"])
     metrics = {}
     for split, filename in (("validation", "val_primary.parquet"), ("test", "test_primary.parquet")):
         logger.info("evaluating split=%s", split)
         metrics[split] = evaluate_split(
             stage3_root / "samples" / filename, rank_paths[split], model, index, indexed_rids,
-            store, config, device, max_samples, p50, p90,
+            store, config, device, max_samples, p50, p90, exclude_history_items,
         )
     save_json(
         {"stage": "5.5", "schema_version": 1, "recall_protocol_version": config["recall_protocol_version"],
          "debug": bool(args.debug), "unseen_policy": "rank is null and sample remains in denominator",
+         "exclude_history_items": exclude_history_items,
+         "repeated_target_audit": str(repeated_audit_path.relative_to(PROJECT_ROOT)),
+         "hnsw_accuracy_audit": str(hnsw_audit_path.relative_to(PROJECT_ROOT)),
          "metrics": metrics, "elapsed_seconds": timer.elapsed_seconds},
         metrics_path, args.overwrite,
     )
