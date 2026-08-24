@@ -1,0 +1,67 @@
+{
+  "stage": "5.4a",
+  "schema_version": 1,
+  "recall_protocol_version": "stage5_recall_baseline_v2",
+  "debug": false,
+  "split": "validation_primary",
+  "seed": 42,
+  "source_sample_count": 456206,
+  "requested_sample_size": 1000,
+  "sampled_row_count": 1000,
+  "valid_query_count": 1000,
+  "zero_user_vector_count": 0,
+  "zero_vector_policy": "exclude from ANN-vs-exact audit and report count",
+  "comparison": "raw HNSW Top-K rows vs exact IndexFlatIP Top-K rows; no history filtering",
+  "configured_efSearch": 512,
+  "indexed_candidate_count": 229456,
+  "metrics": {
+    "@10": {
+      "query_count": 1000,
+      "mean_recall": 0.9967,
+      "p05_recall": 1.0,
+      "median_recall": 1.0,
+      "minimum_recall": 0.4
+    },
+    "@50": {
+      "query_count": 1000,
+      "mean_recall": 0.9965999999999999,
+      "p05_recall": 0.98,
+      "median_recall": 1.0,
+      "minimum_recall": 0.3
+    },
+    "@100": {
+      "query_count": 1000,
+      "mean_recall": 0.99648,
+      "p05_recall": 0.99,
+      "median_recall": 1.0,
+      "minimum_recall": 0.38
+    },
+    "@500": {
+      "query_count": 1000,
+      "mean_recall": 0.9926139999999999,
+      "p05_recall": 0.9659,
+      "median_recall": 1.0,
+      "minimum_recall": 0.43
+    }
+  },
+  "threshold_checks": {
+    "@10": {
+      "minimum_required_mean_recall": 0.95,
+      "passed": true
+    },
+    "@50": {
+      "minimum_required_mean_recall": 0.95,
+      "passed": true
+    },
+    "@100": {
+      "minimum_required_mean_recall": 0.95,
+      "passed": true
+    },
+    "@500": {
+      "minimum_required_mean_recall": 0.9,
+      "passed": true
+    }
+  },
+  "passed": true,
+  "elapsed_seconds": 5.447
+}

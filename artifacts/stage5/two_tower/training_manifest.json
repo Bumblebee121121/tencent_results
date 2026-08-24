@@ -1,0 +1,32 @@
+{
+  "stage": "5.3",
+  "schema_version": 1,
+  "recall_protocol_version": "stage5_recall_baseline_v2",
+  "framework": "pytorch",
+  "model": "VanillaTwoTower",
+  "shared_item_embedding": true,
+  "inputs": [
+    "history_item_token",
+    "target_or_negative_item_token"
+  ],
+  "excluded_inputs": [
+    "action",
+    "timestamp",
+    "side",
+    "multimodal",
+    "strength"
+  ],
+  "history_pooling_ignored_tokens": {
+    "PAD": 0,
+    "UNK": 1
+  },
+  "device": "cuda",
+  "num_item_tokens": 4783156,
+  "negative_pool_scope": "all items with train_item_count > 0; independent of eval candidate membership",
+  "train_seen_negative_pool_count": 4000039,
+  "validation_loss_target_scope": "Train-Seen targets only (model_item_token > UNK); Train-Unseen validation targets are excluded",
+  "best_epoch": 3,
+  "best_validation_loss": 2.046457168915101,
+  "debug": false,
+  "elapsed_seconds": 2264.971
+}

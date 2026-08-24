@@ -52,7 +52,7 @@ faiss:
   index_type: hnsw_flat_ip
   M: 32
   efConstruction: 200
-  efSearch: 128
+  efSearch: 512
   embedding_batch_size: 16384
   query_batch_size: 2048
 

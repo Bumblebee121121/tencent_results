@@ -1,0 +1,44 @@
+{
+  "selection_rule": "highest validation Overall Recall@100",
+  "first_channel": "itemcf:click3_recent20",
+  "second_channel": "two_tower",
+  "evaluation_split": "test",
+  "metrics": {
+    "@10": {
+      "count": 370673,
+      "both_hit": 24,
+      "first_only_hit": 2420,
+      "second_only_hit": 372,
+      "neither_hit": 367857,
+      "union_recall": 0.00759699249743035,
+      "second_incremental_recall": 0.0010035799748025888
+    },
+    "@50": {
+      "count": 370673,
+      "both_hit": 290,
+      "first_only_hit": 8121,
+      "second_only_hit": 1141,
+      "neither_hit": 361121,
+      "union_recall": 0.02576934386912454,
+      "second_incremental_recall": 0.0030781848151875102
+    },
+    "@100": {
+      "count": 370673,
+      "both_hit": 645,
+      "first_only_hit": 12312,
+      "second_only_hit": 1793,
+      "neither_hit": 355923,
+      "union_recall": 0.039792485560048885,
+      "second_incremental_recall": 0.004837147566723231
+    },
+    "@500": {
+      "count": 370673,
+      "both_hit": 3516,
+      "first_only_hit": 24537,
+      "second_only_hit": 4247,
+      "neither_hit": 338373,
+      "union_recall": 0.08713879888742908,
+      "second_incremental_recall": 0.011457538045662888
+    }
+  }
+}

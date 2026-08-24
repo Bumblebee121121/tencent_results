@@ -1,0 +1,2 @@
+2026-08-24 20:11:15,271 | INFO | HNSW accuracy audit passed=False valid_queries=1000 elapsed_seconds=5.54
+2026-08-24 20:16:50,217 | INFO | HNSW accuracy audit passed=True valid_queries=1000 elapsed_seconds=5.45

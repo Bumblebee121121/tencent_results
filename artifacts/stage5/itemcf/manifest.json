@@ -1,0 +1,25 @@
+{
+  "stage": "5.1",
+  "schema_version": 1,
+  "recall_protocol_version": "stage5_recall_baseline_v2",
+  "stage3_protocol_version": "click_target_prefix_v2",
+  "stage4_protocol_version": "stage4_train_only_features_v1",
+  "debug": false,
+  "train_cutoff_exclusive": 1747621423,
+  "fit_window": 20,
+  "neighbor_topn": 500,
+  "pair_partitions": 256,
+  "candidate_neighbor_count": 666261,
+  "seed_scope": "all train-period history items, including non-candidates",
+  "neighbor_scope": "Stage 3 eval candidates with a historical RID",
+  "similarity_variants": [
+    "equal",
+    "click3"
+  ],
+  "unknown_action_weight": 0.0,
+  "processed_users": 1001846,
+  "train_event_count": 74242142,
+  "neighbor_rows": 665052034,
+  "seed_count": 3916545,
+  "elapsed_seconds": 38889.602
+}

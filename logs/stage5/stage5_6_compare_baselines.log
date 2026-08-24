@@ -1,0 +1,26 @@
+2026-08-24 20:22:34,134 | INFO | Stage 5 unit tests:
+test_restore_produces_identical_output (test_checkpoint.CheckpointTest) ... ok
+test_group_metrics_unseen_denominator_and_complementarity (test_faiss_and_evaluation.FaissEvaluationTest) ... ok
+test_hnsw_retrieval_recall_matches_set_overlap (test_faiss_and_evaluation.FaissEvaluationTest) ... ok
+test_toy_faiss_retrieval_and_history_filter (test_faiss_and_evaluation.FaissEvaluationTest) ... <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+ok
+test_unseen_exclusion_and_physical_row_alignment (test_faiss_and_evaluation.FaissEvaluationTest) ... ok
+test_zero_user_vector_is_not_sent_to_faiss (test_faiss_and_evaluation.FaissEvaluationTest) ... ok
+test_partitioned_build_cutoff_non_candidate_seed_and_retrieval (test_itemcf.ItemCFTest) ... ok
+test_unknown_window_and_self_are_ignored (test_itemcf.ItemCFTest) ... ok
+test_window_weights_cosine_candidate_and_topn (test_itemcf.ItemCFTest) ... ok
+test_repeated_target_detection_and_split_ratio (test_protocol_audits.ProtocolAuditTest) ... ok
+test_iterable_dataset_uses_requested_split_and_limit (test_streaming_data.StreamingDataTest) ... ok
+test_negative_pool_uses_train_counts_not_eval_candidate_membership (test_streaming_data.StreamingDataTest) ... ok
+test_strict_prefix_collation_and_negative_exclusion (test_streaming_data.StreamingDataTest) ... ok
+test_device_fallback (test_two_tower_model.TwoTowerModelTest) ... ok
+test_forward_shape_pad_mean_and_gradient (test_two_tower_model.TwoTowerModelTest) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.641s
+
+OK
+
+2026-08-24 20:22:34,137 | INFO | comparison complete selected_itemcf=click3_recent20 elapsed_seconds=7.00

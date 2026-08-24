@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "recall_protocol_version": "stage5_recall_baseline_v2",
+  "stage3_protocol_version": "click_target_prefix_v2",
+  "stage4_protocol_version": "stage4_train_only_features_v1",
+  "debug": false,
+  "frameworks": {
+    "two_tower": "PyTorch",
+    "ann": "FAISS CPU HNSW-IP",
+    "itemcf": "NumPy/PyArrow"
+  },
+  "best_itemcf_selected_on_validation": "click3_recent20",
+  "exclude_history_items": false,
+  "hnsw_accuracy_audit_passed": true,
+  "two_tower_zero_user_vectors": {
+    "validation": {
+      "sample_count": 456206,
+      "zero_user_vector_count": 149,
+      "zero_user_vector_ratio": 0.0003266068398925047
+    },
+    "test": {
+      "sample_count": 370673,
+      "zero_user_vector_count": 149,
+      "zero_user_vector_ratio": 0.00040197154904727346
+    }
+  },
+  "all_stage5_tests_passed": true,
+  "outputs": {
+    "itemcf_metrics": "artifacts\\stage5\\itemcf\\metrics.json",
+    "two_tower_metrics": "artifacts\\stage5\\two_tower\\metrics.json",
+    "recall_comparison": "artifacts\\stage5\\reports\\recall_comparison.csv",
+    "channel_complementarity": "artifacts\\stage5\\reports\\channel_complementarity.json",
+    "repeated_target_audit": "artifacts\\stage5\\audits\\repeated_target_audit.json",
+    "hnsw_accuracy_audit": "artifacts\\stage5\\audits\\hnsw_accuracy_audit.json"
+  },
+  "elapsed_seconds": 6.997
+}

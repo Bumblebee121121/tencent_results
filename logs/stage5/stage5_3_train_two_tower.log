@@ -1,0 +1,5 @@
+2026-08-24 19:33:23,428 | INFO | device=cuda item_tokens=4783156 train_seen_negative_pool=4000039 epochs=3
+2026-08-24 19:46:31,183 | INFO | epoch=1 train_loss=2.174313 validation_loss=2.105594 train_samples=6949073 validation_samples=62602 best=True
+2026-08-24 20:00:33,428 | INFO | epoch=2 train_loss=1.971918 validation_loss=2.063635 train_samples=6949073 validation_samples=62602 best=True
+2026-08-24 20:10:55,466 | INFO | epoch=3 train_loss=1.939246 validation_loss=2.046457 train_samples=6949073 validation_samples=62602 best=True
+2026-08-24 20:10:55,472 | INFO | training complete best_epoch=3 elapsed_seconds=2264.97

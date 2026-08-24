@@ -1,0 +1,21 @@
+2026-08-23 23:10:48,242 | INFO | itemcf scanned_users=50000 train_events=3705155 buffered_pairs=770735
+2026-08-23 23:13:25,758 | INFO | itemcf scanned_users=100000 train_events=7410920 buffered_pairs=616363
+2026-08-23 23:16:04,887 | INFO | itemcf scanned_users=150000 train_events=11113369 buffered_pairs=281098
+2026-08-23 23:18:48,400 | INFO | itemcf scanned_users=200000 train_events=14823834 buffered_pairs=182073
+2026-08-23 23:21:30,876 | INFO | itemcf scanned_users=250000 train_events=18530431 buffered_pairs=860983
+2026-08-23 23:24:14,162 | INFO | itemcf scanned_users=300000 train_events=22237322 buffered_pairs=679390
+2026-08-23 23:26:55,926 | INFO | itemcf scanned_users=350000 train_events=25939694 buffered_pairs=484343
+2026-08-23 23:29:37,367 | INFO | itemcf scanned_users=400000 train_events=29647066 buffered_pairs=372150
+2026-08-23 23:32:19,915 | INFO | itemcf scanned_users=450000 train_events=33347733 buffered_pairs=951927
+2026-08-23 23:34:59,414 | INFO | itemcf scanned_users=500000 train_events=37043416 buffered_pairs=645546
+2026-08-23 23:37:40,064 | INFO | itemcf scanned_users=550000 train_events=40748489 buffered_pairs=412998
+2026-08-23 23:40:38,122 | INFO | itemcf scanned_users=600000 train_events=44446582 buffered_pairs=236906
+2026-08-23 23:43:28,741 | INFO | itemcf scanned_users=650000 train_events=48152476 buffered_pairs=921307
+2026-08-23 23:46:10,784 | INFO | itemcf scanned_users=700000 train_events=51859310 buffered_pairs=488107
+2026-08-23 23:48:49,835 | INFO | itemcf scanned_users=750000 train_events=55562646 buffered_pairs=329541
+2026-08-23 23:51:30,860 | INFO | itemcf scanned_users=800000 train_events=59272515 buffered_pairs=196553
+2026-08-23 23:54:10,678 | INFO | itemcf scanned_users=850000 train_events=62981664 buffered_pairs=114961
+2026-08-23 23:57:16,108 | INFO | itemcf scanned_users=900000 train_events=66688613 buffered_pairs=34427
+2026-08-24 00:01:43,121 | INFO | itemcf scanned_users=950000 train_events=70395169 buffered_pairs=815353
+2026-08-24 00:14:07,148 | INFO | itemcf scanned_users=1000000 train_events=74105811 buffered_pairs=620303
+2026-08-24 09:55:35,266 | INFO | wrote neighbor_rows=665052034 elapsed_seconds=38889.60

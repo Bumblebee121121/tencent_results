@@ -1,0 +1,7 @@
+2026-08-24 09:55:42,878 | INFO | evaluating experiment=equal_all split=validation
+2026-08-24 12:04:53,944 | INFO | evaluating experiment=equal_all split=test
+2026-08-24 14:19:01,123 | INFO | evaluating experiment=click3_all split=validation
+2026-08-24 16:21:35,868 | INFO | evaluating experiment=click3_all split=test
+2026-08-24 18:12:28,066 | INFO | evaluating experiment=click3_recent20 split=validation
+2026-08-24 18:55:38,898 | INFO | evaluating experiment=click3_recent20 split=test
+2026-08-24 19:33:04,865 | INFO | ItemCF evaluation complete elapsed_seconds=34641.99
