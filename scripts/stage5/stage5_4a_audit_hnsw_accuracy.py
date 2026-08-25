@@ -18,7 +18,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.models.vanilla_two_tower import VanillaTwoTower
 from src.recall.audits import reservoir_sample_rows
-from src.recall.checkpoint import load_checkpoint
+from src.recall.checkpoint import load_model_checkpoint
 from src.recall.data import Stage5SequenceStore, TwoTowerCollator
 from src.recall.faiss_utils import hnsw_retrieval_recall
 from src.recall.runtime import (
@@ -46,7 +46,9 @@ def encode_sampled_users(rows, store, model, device, batch_size):
             batch = collator(rows[start : start + batch_size])
             if not batch["rows"]:
                 continue
-            query = model.encode_user(batch["history_tokens"].to(device)).cpu().numpy().astype(np.float32)
+            query = model.encode_user(
+                batch["history_tokens"].to(device), batch["history_offsets"].to(device),
+            ).cpu().numpy().astype(np.float32)
             valid = np.linalg.norm(query, axis=1) > 0
             zero_vector_count += int(np.count_nonzero(~valid))
             if np.any(valid):
@@ -91,12 +93,11 @@ def main() -> None:
     )
 
     store = Stage5SequenceStore(stage4_root)
-    checkpoint = load_checkpoint(checkpoint_path, map_location="cpu")
+    model_section = config["two_tower"]
+    model = VanillaTwoTower(store.rid_to_token.size + 1, int(model_section["embedding_dim"]))
+    checkpoint = load_model_checkpoint(checkpoint_path, model, map_location="cpu")
     if checkpoint["protocols"].get("recall") != config["recall_protocol_version"]:
         raise ValueError("checkpoint recall protocol mismatch")
-    model_section = checkpoint["config"]["two_tower"]
-    model = VanillaTwoTower(store.rid_to_token.size + 1, int(model_section["embedding_dim"]))
-    model.load_state_dict(checkpoint["model"])
     device = select_device(args.device)
     model.to(device).eval()
     queries, sample_ids, zero_count = encode_sampled_users(

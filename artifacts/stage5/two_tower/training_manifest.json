@@ -1,6 +1,6 @@
 {
   "stage": "5.3",
-  "schema_version": 1,
+  "schema_version": 4,
   "recall_protocol_version": "stage5_recall_baseline_v2",
   "framework": "pytorch",
   "model": "VanillaTwoTower",
@@ -25,8 +25,42 @@
   "negative_pool_scope": "all items with train_item_count > 0; independent of eval candidate membership",
   "train_seen_negative_pool_count": 4000039,
   "validation_loss_target_scope": "Train-Seen targets only (model_item_token > UNK); Train-Unseen validation targets are excluded",
-  "best_epoch": 3,
-  "best_validation_loss": 2.046457168915101,
+  "validation_uses_complete_split": true,
+  "validation_max_samples": null,
+  "validation_train_seen_sample_count": 284899,
+  "early_stopping": {
+    "metric": "validation_loss",
+    "mode": "min",
+    "patience": 2,
+    "min_delta": 0.002,
+    "max_epochs": 12,
+    "stopped_early": false,
+    "completed_epoch": 12
+  },
+  "checkpoint_write_mode": "atomic_temp_then_replace",
+  "checkpoint_policy": {
+    "best": "model-only, saved on every lower validation loss",
+    "resume": "model+SparseAdam, saved periodically and at early-stop/max-epoch",
+    "resume_interval_epochs": 3,
+    "best_path": "D:\\AI-file\\tecent\\artifacts\\stage5\\two_tower\\checkpoints\\best.pt",
+    "resume_path": "D:\\AI-file\\tecent\\artifacts\\stage5\\two_tower\\checkpoints\\resume.pt"
+  },
+  "history_representation": "ragged_offsets_no_padding",
+  "negative_sampling_implementation": "vectorized_batch_proposals_with_exact_exclusion",
+  "last_epoch_phase_metrics": {
+    "train_seconds": 2063.3,
+    "validation_seconds": 100.332,
+    "checkpoint_seconds": 19.003,
+    "process_rss_mb": 6617.3,
+    "process_private_mb": 37540.5,
+    "system_available_mb": 6400.3,
+    "system_commit_available_mb": 21919.1
+  },
+  "status": "max_epochs_reached",
+  "resumed": true,
+  "resumed_from": "D:\\AI-file\\tecent\\artifacts\\stage5\\two_tower\\checkpoints\\best.pt",
+  "best_epoch": 12,
+  "best_validation_loss": 2.0110079610161424,
   "debug": false,
-  "elapsed_seconds": 2264.971
+  "elapsed_seconds": 5372.896
 }

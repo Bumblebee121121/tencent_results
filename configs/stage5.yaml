@@ -42,11 +42,19 @@ two_tower:
   embedding_dim: 64
   batch_size: 2048
   random_negatives: 20
-  epochs: 3
+  # Total epoch ceiling. Use --resume to continue an existing best checkpoint.
+  max_epochs: 12
+  early_stopping_patience: 2
+  early_stopping_min_delta: 0.002
+  # Save the 3.67 GB model+SparseAdam resume state periodically, not after every best epoch.
+  resume_checkpoint_interval: 3
   learning_rate: 0.01
   max_history_length: null
   num_workers: 0
-  validation_max_samples: 100000
+  # Ragged histories make pinned host-memory staging unnecessary and avoid allocator retention.
+  pin_memory: false
+  # null scans the complete Validation Primary split; the collator keeps Train-Seen targets only.
+  validation_max_samples: null
 
 faiss:
   index_type: hnsw_flat_ip

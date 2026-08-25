@@ -20,7 +20,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.data.item_strength import classify_strength
 from src.models.vanilla_two_tower import VanillaTwoTower
-from src.recall.checkpoint import load_checkpoint
+from src.recall.checkpoint import load_model_checkpoint
 from src.recall.data import Stage5SequenceStore
 from src.recall.faiss_utils import build_hnsw_ip, train_seen_candidate_rows
 from src.recall.runtime import (
@@ -70,12 +70,11 @@ def main() -> None:
     pq.write_table(pa.Table.from_pylist(rows, schema=INDEXED_SCHEMA), candidates_path, compression="snappy")
 
     device = select_device(args.device)
-    checkpoint = load_checkpoint(checkpoint_path, map_location="cpu")
+    section = config["two_tower"]
+    model = VanillaTwoTower(store.rid_to_token.size + 1, int(section["embedding_dim"]))
+    checkpoint = load_model_checkpoint(checkpoint_path, model, map_location="cpu")
     if checkpoint["protocols"].get("recall") != config["recall_protocol_version"]:
         raise ValueError("checkpoint recall protocol mismatch")
-    section = checkpoint["config"]["two_tower"]
-    model = VanillaTwoTower(store.rid_to_token.size + 1, int(section["embedding_dim"]))
-    model.load_state_dict(checkpoint["model"])
     model.to(device).eval()
     batch_size = int(config["faiss"]["embedding_batch_size"])
     embeddings = np.lib.format.open_memmap(

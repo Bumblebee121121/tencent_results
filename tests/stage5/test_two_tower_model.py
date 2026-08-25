@@ -40,6 +40,24 @@ class TwoTowerModelTest(unittest.TestCase):
         self.assertFalse(torch.equal(before, model.item_embedding.weight.detach()))
         self.assertTrue(torch.equal(before[1], model.item_embedding.weight.detach()[1]))
 
+    def test_ragged_pooling_matches_dense_pooling_without_padding_amplification(self):
+        model = VanillaTwoTower(8, embedding_dim=3)
+        dense = torch.tensor([[2, 3, 0], [1, 0, 0], [4, 5, 6]])
+        ragged_tokens = torch.tensor([2, 3, 4, 5, 6])
+        offsets = torch.tensor([0, 2, 2, 5])
+
+        dense_output = model.encode_user(dense)
+        ragged_output = model.encode_user(ragged_tokens, offsets)
+
+        self.assertTrue(torch.allclose(dense_output, ragged_output, atol=1e-6))
+        self.assertTrue(torch.equal(ragged_output[1], torch.zeros(3)))
+        loss = model.sampled_softmax_loss(
+            ragged_tokens, torch.tensor([2, 3, 4]),
+            torch.tensor([[4, 5], [5, 6], [2, 3]]), offsets,
+        )
+        loss.backward()
+        self.assertTrue(model.item_embedding.weight.grad.is_sparse)
+
     def test_device_fallback(self):
         if not torch.cuda.is_available():
             self.assertEqual("cpu", select_device("cuda").type)

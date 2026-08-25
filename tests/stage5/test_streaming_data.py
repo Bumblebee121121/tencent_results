@@ -37,6 +37,18 @@ class StreamingDataTest(unittest.TestCase):
         )
         self.assertEqual([2, 4], train_seen_item_tokens(store).tolist())
 
+    def test_vectorized_negative_sampling_excludes_each_target_and_history(self):
+        sampler = UniformNegativeSampler(np.arange(2, 30), negatives=5, seed=11)
+        histories = [np.array([2, 3, 4]), np.array([5, 6, 7, 8])]
+        targets = [9, 10]
+
+        negatives = sampler.sample_batch(targets, histories)
+
+        self.assertEqual((2, 5), negatives.shape)
+        for row, target, history in zip(negatives, targets, histories):
+            self.assertEqual(5, len(set(row.tolist())))
+            self.assertTrue(set(row.tolist()).isdisjoint({target, *history.tolist()}))
+
     def test_strict_prefix_collation_and_negative_exclusion(self):
         with workspace_tempdir() as temporary:
             store = make_store(temporary)
@@ -47,7 +59,8 @@ class StreamingDataTest(unittest.TestCase):
             sampler = UniformNegativeSampler([2, 3, 4, 5, 6], negatives=2, seed=7)
             collator = TwoTowerCollator(store, sampler)
             batch = collator([row])
-            self.assertEqual([[2, 3]], batch["history_tokens"].tolist())
+            self.assertEqual([2, 3], batch["history_tokens"].tolist())
+            self.assertEqual([0, 2], batch["history_offsets"].tolist())
             self.assertEqual([4], batch["target_tokens"].tolist())
             self.assertTrue(set(batch["negative_tokens"][0].tolist()).isdisjoint({2, 3, 4}))
             self.assertEqual([2, 3, 4, 5, 6], train_seen_item_tokens(store).tolist())
@@ -55,6 +68,20 @@ class StreamingDataTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 store.history(bad)
             del batch, collator, store
+
+    def test_ragged_collation_avoids_padding(self):
+        with workspace_tempdir() as temporary:
+            store = make_store(temporary)
+            rows = [
+                {"sample_id": 1, "user_id": 0, "target_item_rid": 3, "target_item_oid": 30,
+                 "target_timestamp": 30, "history_end_position": 1, "history_length": 1},
+                {"sample_id": 2, "user_id": 0, "target_item_rid": 3, "target_item_oid": 30,
+                 "target_timestamp": 30, "history_end_position": 2, "history_length": 2},
+            ]
+            batch = TwoTowerCollator(store)(rows)
+            self.assertEqual([2, 2, 3], batch["history_tokens"].tolist())
+            self.assertEqual([0, 1, 3], batch["history_offsets"].tolist())
+            self.assertEqual(3, batch["history_tokens"].numel())
 
     def test_iterable_dataset_uses_requested_split_and_limit(self):
         with workspace_tempdir() as root:

@@ -86,24 +86,49 @@ class UniformNegativeSampler:
         self.rng = np.random.default_rng(seed)
 
     def sample(self, target: int, history: Sequence[int]) -> np.ndarray:
-        excluded = set(map(int, history))
-        excluded.add(int(target))
-        if self.candidates.size - len(excluded) < self.negatives:
-            available = int(np.count_nonzero(~np.isin(self.candidates, list(excluded))))
-            if available < self.negatives:
-                raise ValueError("not enough eligible negative candidates")
-        result: list[int] = []
-        chosen: set[int] = set()
-        while len(result) < self.negatives:
-            draws = self.rng.choice(self.candidates, size=max(8, 2 * (self.negatives - len(result))), replace=True)
-            for value in draws:
-                token = int(value)
-                if token not in excluded and token not in chosen:
-                    chosen.add(token)
-                    result.append(token)
-                    if len(result) == self.negatives:
-                        break
-        return np.asarray(result, dtype=np.int64)
+        return self.sample_batch([target], [history])[0]
+
+    def sample_batch(
+        self, targets: Sequence[int], histories: Sequence[Sequence[int]],
+    ) -> np.ndarray:
+        """Draw one vectorized proposal matrix, then apply exact per-row exclusions."""
+
+        if len(targets) != len(histories):
+            raise ValueError("targets and histories must have equal length")
+        row_count = len(targets)
+        result = np.empty((row_count, self.negatives), dtype=np.int64)
+        if row_count == 0:
+            return result
+        proposal_width = max(32, self.negatives * 2)
+        proposal_indices = self.rng.integers(
+            0, self.candidates.size, size=(row_count, proposal_width), dtype=np.int64,
+        )
+        proposals = self.candidates[proposal_indices]
+        for row_index, (target, history) in enumerate(zip(targets, histories)):
+            excluded = {int(value) for value in history if int(value) > 1}
+            excluded.add(int(target))
+            if self.candidates.size - len(excluded) < self.negatives:
+                available = int(np.count_nonzero(~np.isin(self.candidates, list(excluded))))
+                if available < self.negatives:
+                    raise ValueError("not enough eligible negative candidates")
+            chosen: set[int] = set()
+            values: list[int] = []
+            pending = proposals[row_index]
+            while len(values) < self.negatives:
+                for value in pending:
+                    token = int(value)
+                    if token not in excluded and token not in chosen:
+                        chosen.add(token)
+                        values.append(token)
+                        if len(values) == self.negatives:
+                            break
+                if len(values) < self.negatives:
+                    pending = self.candidates[self.rng.integers(
+                        0, self.candidates.size,
+                        size=max(8, 2 * (self.negatives - len(values))), dtype=np.int64,
+                    )]
+            result[row_index] = values
+        return result
 
 
 @dataclass
@@ -117,7 +142,6 @@ class TwoTowerCollator:
         histories: list[np.ndarray] = []
         kept: list[dict[str, object]] = []
         targets: list[int] = []
-        negatives: list[np.ndarray] = []
         for row in rows:
             target = self.store.target_token(row.get("target_item_rid"))
             if self.require_seen_target and target <= 1:
@@ -126,24 +150,35 @@ class TwoTowerCollator:
             tokens = self.store.tokens_for_rids(history.item_rid)
             if tokens.size == 0:
                 continue
-            histories.append(tokens)
+            # PAD/UNK never contribute to pooling or exclusions because candidates are Train-Seen.
+            histories.append(np.asarray(tokens[tokens > 1], dtype=np.int64))
             targets.append(target)
             kept.append(row)
-            if self.negative_sampler is not None:
-                negatives.append(self.negative_sampler.sample(target, tokens))
         if not kept:
-            return {"rows": [], "history_tokens": torch.empty((0, 0), dtype=torch.long), "target_tokens": torch.empty(0, dtype=torch.long)}
-        width = max(len(values) for values in histories)
-        padded = np.zeros((len(histories), width), dtype=np.int64)
-        for index, values in enumerate(histories):
-            padded[index, -len(values):] = values
+            return {
+                "rows": [], "history_tokens": torch.empty(0, dtype=torch.long),
+                "history_offsets": torch.zeros(1, dtype=torch.long),
+                "target_tokens": torch.empty(0, dtype=torch.long),
+            }
+        lengths = np.fromiter((len(values) for values in histories), dtype=np.int64, count=len(kept))
+        offsets = np.empty(len(kept) + 1, dtype=np.int64)
+        offsets[0] = 0
+        np.cumsum(lengths, out=offsets[1:])
+        flattened = (
+            np.concatenate(histories)
+            if int(offsets[-1])
+            else np.empty(0, dtype=np.int64)
+        )
         batch: dict[str, object] = {
             "rows": kept,
-            "history_tokens": torch.from_numpy(padded),
+            "history_tokens": torch.from_numpy(flattened),
+            "history_offsets": torch.from_numpy(offsets),
             "target_tokens": torch.tensor(targets, dtype=torch.long),
         }
-        if negatives:
-            batch["negative_tokens"] = torch.from_numpy(np.stack(negatives))
+        if self.negative_sampler is not None:
+            batch["negative_tokens"] = torch.from_numpy(
+                self.negative_sampler.sample_batch(targets, histories)
+            )
         return batch
 
 

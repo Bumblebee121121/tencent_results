@@ -21,7 +21,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.data.item_strength import classify_strength
 from src.models.vanilla_two_tower import VanillaTwoTower
-from src.recall.checkpoint import load_checkpoint
+from src.recall.checkpoint import load_model_checkpoint
 from src.recall.data import ParquetSampleIterableDataset, Stage5SequenceStore, TwoTowerCollator
 from src.recall.evaluation import metrics_from_ranks
 from src.recall.faiss_utils import filter_history_from_faiss_rows, search_nonzero_queries
@@ -66,7 +66,10 @@ def evaluate_split(
                 if not batch["rows"]:
                     continue
                 history_tokens = batch["history_tokens"].to(device)
-                query = np.ascontiguousarray(model.encode_user(history_tokens).cpu().numpy(), dtype=np.float32)
+                history_offsets = batch["history_offsets"].to(device)
+                query = np.ascontiguousarray(
+                    model.encode_user(history_tokens, history_offsets).cpu().numpy(), dtype=np.float32,
+                )
                 histories = [store.history(row).item_rid for row in batch["rows"]]
                 largest_history = (
                     max((len(set(map(int, values))) for values in histories), default=0)
@@ -139,12 +142,11 @@ def main() -> None:
     rank_paths = {split: root / "ranks" / f"{split}.parquet" for split in ("validation", "test")}
     guard_outputs([metrics_path, *rank_paths.values()], args.overwrite)
     store = Stage5SequenceStore(stage4_root)
-    checkpoint = load_checkpoint(required[0], map_location="cpu")
+    section = config["two_tower"]
+    model = VanillaTwoTower(store.rid_to_token.size + 1, int(section["embedding_dim"]))
+    checkpoint = load_model_checkpoint(required[0], model, map_location="cpu")
     if checkpoint["protocols"].get("recall") != config["recall_protocol_version"]:
         raise ValueError("checkpoint recall protocol mismatch")
-    section = checkpoint["config"]["two_tower"]
-    model = VanillaTwoTower(store.rid_to_token.size + 1, int(section["embedding_dim"]))
-    model.load_state_dict(checkpoint["model"])
     device = select_device(args.device)
     model.to(device).eval()
     index = faiss.read_index(str(root / "faiss.index"))
