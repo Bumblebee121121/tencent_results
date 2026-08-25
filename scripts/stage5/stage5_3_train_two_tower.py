@@ -18,7 +18,9 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.models.vanilla_two_tower import VanillaTwoTower
-from src.recall.checkpoint import load_training_checkpoint, restore_random_state, save_checkpoint
+from src.recall.checkpoint import (
+    CpuCheckpointBuffer, load_training_checkpoint, restore_random_state, save_checkpoint,
+)
 from src.recall.data import (
     ParquetSampleIterableDataset, Stage5SequenceStore, TwoTowerCollator,
     UniformNegativeSampler, train_seen_item_tokens,
@@ -116,6 +118,7 @@ HISTORY_FIELDS = [
     "significant_improvement", "early_stopping_bad_epochs", "validation_scope",
     "train_seconds", "validation_seconds", "checkpoint_seconds", "process_rss_mb",
     "process_private_mb", "system_available_mb", "system_commit_available_mb",
+    "checkpoint_cpu_buffer_mb",
 ]
 
 
@@ -148,7 +151,7 @@ def build_training_manifest(
     resume_checkpoint_interval, stopper, debug, elapsed_seconds, status, phase_metrics,
 ) -> dict:
     return {
-        "stage": "5.3", "schema_version": 4,
+        "stage": "5.3", "schema_version": 5,
         "recall_protocol_version": config["recall_protocol_version"],
         "framework": "pytorch", "model": "VanillaTwoTower", "shared_item_embedding": True,
         "inputs": ["history_item_token", "target_or_negative_item_token"],
@@ -167,6 +170,7 @@ def build_training_manifest(
             "stopped_early": stopped_early, "completed_epoch": completed_epoch,
         },
         "checkpoint_write_mode": "atomic_temp_then_replace",
+        "checkpoint_cpu_staging": "reusable_cpu_tensor_buffer",
         "checkpoint_policy": {
             "best": "model-only, saved on every lower validation loss",
             "resume": "model+SparseAdam, saved periodically and at early-stop/max-epoch",
@@ -243,6 +247,7 @@ def main() -> None:
     num_tokens = int(store.rid_to_token.size + 1)
     model = VanillaTwoTower(num_tokens, int(section["embedding_dim"])).to(device)
     optimizer = torch.optim.SparseAdam(model.parameters(), lr=float(section["learning_rate"]))
+    checkpoint_buffer = CpuCheckpointBuffer()
     protocols = {
         "recall": config["recall_protocol_version"],
         "stage3": config["stage3_protocol_version"],
@@ -299,14 +304,14 @@ def main() -> None:
                 training_state={
                     **stopper.state_dict(), "validation_scope": validation_scope,
                     "validation_max_samples": max_validation,
-                },
+                }, cpu_buffer=checkpoint_buffer,
             )
             save_checkpoint(
                 checkpoint_path, model, None, checkpoint_epoch, config, protocols, baseline_loss,
                 training_state={
                     **stopper.state_dict(), "validation_scope": validation_scope,
                     "validation_max_samples": max_validation,
-                },
+                }, cpu_buffer=checkpoint_buffer,
             )
             last_resume_epoch = checkpoint_epoch
             logger.info(
@@ -365,13 +370,13 @@ def main() -> None:
         if save_resume:
             save_checkpoint(
                 resume_checkpoint_path, model, optimizer, epoch, config, protocols, validation_loss,
-                training_state=training_state,
+                training_state=training_state, cpu_buffer=checkpoint_buffer,
             )
             last_resume_epoch = epoch
         if decision.is_best:
             save_checkpoint(
                 checkpoint_path, model, None, epoch, config, protocols, validation_loss,
-                training_state=training_state,
+                training_state=training_state, cpu_buffer=checkpoint_buffer,
             )
         if device.type == "cuda":
             torch.cuda.empty_cache()
@@ -382,6 +387,7 @@ def main() -> None:
             "train_seconds": round(train_seconds, 3),
             "validation_seconds": round(validation_seconds, 3),
             "checkpoint_seconds": round(checkpoint_seconds, 3),
+            "checkpoint_cpu_buffer_mb": round(checkpoint_buffer.allocated_bytes / (1024 ** 2), 1),
             **memory,
         }
         history_rows.append(

@@ -8,7 +8,8 @@ import torch
 
 from src.models.vanilla_two_tower import VanillaTwoTower
 from src.recall.checkpoint import (
-    load_checkpoint, load_model_checkpoint, load_training_checkpoint, save_checkpoint,
+    CpuCheckpointBuffer, load_checkpoint, load_model_checkpoint, load_training_checkpoint,
+    save_checkpoint,
 )
 from tests.stage5._temp import workspace_tempdir
 
@@ -112,6 +113,47 @@ class CheckpointTest(unittest.TestCase):
 
             self.assertEqual(path.read_bytes(), b"known-good-checkpoint")
             self.assertEqual(list(temporary.glob(".*.tmp")), [])
+
+    def test_cpu_checkpoint_buffer_reuses_tensor_storage(self):
+        model = VanillaTwoTower(10, 4)
+        optimizer = torch.optim.SparseAdam(model.parameters(), lr=0.01)
+        history = torch.tensor([[2, 3, 0]])
+        loss = model.sampled_softmax_loss(
+            history, torch.tensor([4]), torch.tensor([[5, 6]]),
+        )
+        loss.backward()
+        optimizer.step()
+        buffer = CpuCheckpointBuffer()
+        with workspace_tempdir() as temporary:
+            path = temporary / "resume.pt"
+            save_checkpoint(path, model, optimizer, 1, {}, {}, 0.5, cpu_buffer=buffer)
+            self.assertEqual(buffer.tensor_count, 3)
+            first_pointers = {
+                key: tensor.data_ptr() for key, tensor in buffer._tensor_buffers.items()
+            }
+            first_bytes = buffer.allocated_bytes
+            with torch.no_grad():
+                model.item_embedding.weight[2].add_(1.0)
+
+            save_checkpoint(path, model, optimizer, 2, {}, {}, 0.4, cpu_buffer=buffer)
+
+            self.assertEqual(first_bytes, buffer.allocated_bytes)
+            self.assertEqual(
+                first_pointers,
+                {key: tensor.data_ptr() for key, tensor in buffer._tensor_buffers.items()},
+            )
+            checkpoint = load_checkpoint(path)
+            self.assertEqual(checkpoint["epoch"], 2)
+            self.assertTrue(torch.equal(
+                checkpoint["model"]["item_embedding.weight"],
+                model.item_embedding.weight.detach().cpu(),
+            ))
+            restored = VanillaTwoTower(10, 4)
+            restored_optimizer = torch.optim.SparseAdam(restored.parameters(), lr=0.01)
+            load_training_checkpoint(path, restored, restored_optimizer)
+            self.assertEqual(1, len(restored_optimizer.state))
+            restored_state = next(iter(restored_optimizer.state.values()))
+            self.assertEqual({"step", "exp_avg", "exp_avg_sq"}, set(restored_state))
 
 
 if __name__ == "__main__":

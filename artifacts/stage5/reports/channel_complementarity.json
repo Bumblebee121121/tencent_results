@@ -6,39 +6,39 @@
   "metrics": {
     "@10": {
       "count": 370673,
-      "both_hit": 24,
-      "first_only_hit": 2420,
-      "second_only_hit": 372,
-      "neither_hit": 367857,
-      "union_recall": 0.00759699249743035,
-      "second_incremental_recall": 0.0010035799748025888
+      "both_hit": 21,
+      "first_only_hit": 2423,
+      "second_only_hit": 363,
+      "neither_hit": 367866,
+      "union_recall": 0.007572712336749642,
+      "second_incremental_recall": 0.0009792998141218811
     },
     "@50": {
       "count": 370673,
-      "both_hit": 290,
-      "first_only_hit": 8121,
-      "second_only_hit": 1141,
-      "neither_hit": 361121,
-      "union_recall": 0.02576934386912454,
-      "second_incremental_recall": 0.0030781848151875102
+      "both_hit": 293,
+      "first_only_hit": 8118,
+      "second_only_hit": 1134,
+      "neither_hit": 361128,
+      "union_recall": 0.02575045929970621,
+      "second_incremental_recall": 0.003059300245769182
     },
     "@100": {
       "count": 370673,
-      "both_hit": 645,
-      "first_only_hit": 12312,
-      "second_only_hit": 1793,
-      "neither_hit": 355923,
-      "union_recall": 0.039792485560048885,
-      "second_incremental_recall": 0.004837147566723231
+      "both_hit": 674,
+      "first_only_hit": 12283,
+      "second_only_hit": 1717,
+      "neither_hit": 355999,
+      "union_recall": 0.039587453092078465,
+      "second_incremental_recall": 0.004632115098752809
     },
     "@500": {
       "count": 370673,
-      "both_hit": 3516,
-      "first_only_hit": 24537,
-      "second_only_hit": 4247,
-      "neither_hit": 338373,
-      "union_recall": 0.08713879888742908,
-      "second_incremental_recall": 0.011457538045662888
+      "both_hit": 3501,
+      "first_only_hit": 24552,
+      "second_only_hit": 4197,
+      "neither_hit": 338423,
+      "union_recall": 0.0870039091058696,
+      "second_incremental_recall": 0.011322648264103402
     }
   }
 }

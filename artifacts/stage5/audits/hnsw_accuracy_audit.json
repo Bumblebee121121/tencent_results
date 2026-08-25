@@ -17,31 +17,31 @@
   "metrics": {
     "@10": {
       "query_count": 1000,
-      "mean_recall": 0.9967,
+      "mean_recall": 0.9995,
       "p05_recall": 1.0,
       "median_recall": 1.0,
-      "minimum_recall": 0.4
+      "minimum_recall": 0.9
     },
     "@50": {
       "query_count": 1000,
-      "mean_recall": 0.9965999999999999,
-      "p05_recall": 0.98,
+      "mean_recall": 0.9998,
+      "p05_recall": 1.0,
       "median_recall": 1.0,
-      "minimum_recall": 0.3
+      "minimum_recall": 0.98
     },
     "@100": {
       "query_count": 1000,
-      "mean_recall": 0.99648,
-      "p05_recall": 0.99,
+      "mean_recall": 0.99978,
+      "p05_recall": 1.0,
       "median_recall": 1.0,
-      "minimum_recall": 0.38
+      "minimum_recall": 0.99
     },
     "@500": {
       "query_count": 1000,
-      "mean_recall": 0.9926139999999999,
-      "p05_recall": 0.9659,
+      "mean_recall": 0.999432,
+      "p05_recall": 0.998,
       "median_recall": 1.0,
-      "minimum_recall": 0.43
+      "minimum_recall": 0.936
     }
   },
   "threshold_checks": {
@@ -63,5 +63,5 @@
     }
   },
   "passed": true,
-  "elapsed_seconds": 5.447
+  "elapsed_seconds": 4.826
 }

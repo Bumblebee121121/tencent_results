@@ -7,12 +7,12 @@
   "index_type": "HNSWFlat-IP",
   "M": 32,
   "efConstruction": 200,
-  "efSearch": 128,
+  "efSearch": 512,
   "embedding_dim": 64,
   "full_eval_candidate_count": 815232,
   "indexed_train_seen_candidate_count": 229456,
   "excluded_train_unseen_candidate_count": 585776,
   "row_alignment": "faiss row equals physical row in indexed_candidates.parquet; retrieval_id is metadata only",
   "faiss_ntotal": 229456,
-  "elapsed_seconds": 8.255
+  "elapsed_seconds": 6.854
 }

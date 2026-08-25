@@ -6,11 +6,66 @@ import gc
 import os
 import random
 import uuid
+from collections import OrderedDict
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Mapping
 
 import numpy as np
 import torch
+
+
+class CpuCheckpointBuffer:
+    """Reusable CPU tensors that prevent CUDA checkpoint staging from growing each save."""
+
+    def __init__(self) -> None:
+        self._tensor_buffers: dict[tuple[str, ...], torch.Tensor] = {}
+
+    def _copy_tree(self, value: Any, path: tuple[str, ...]) -> Any:
+        if isinstance(value, torch.Tensor):
+            source = value.detach()
+            target = self._tensor_buffers.get(path)
+            if (
+                target is None
+                or target.shape != source.shape
+                or target.dtype != source.dtype
+            ):
+                target = torch.empty_like(source, device="cpu", pin_memory=False)
+                self._tensor_buffers[path] = target
+            target.copy_(source, non_blocking=False)
+            return target
+        if isinstance(value, OrderedDict):
+            copied = OrderedDict(
+                (key, self._copy_tree(item, path + (str(key),)))
+                for key, item in value.items()
+            )
+            if hasattr(value, "_metadata"):
+                copied._metadata = deepcopy(value._metadata)
+            return copied
+        if isinstance(value, dict):
+            return {
+                key: self._copy_tree(item, path + (str(key),))
+                for key, item in value.items()
+            }
+        if isinstance(value, list):
+            return [self._copy_tree(item, path + (str(index),)) for index, item in enumerate(value)]
+        if isinstance(value, tuple):
+            return tuple(self._copy_tree(item, path + (str(index),)) for index, item in enumerate(value))
+        return deepcopy(value)
+
+    def model_state_dict(self, model: torch.nn.Module) -> Mapping[str, Any]:
+        return self._copy_tree(model.state_dict(), ("model",))
+
+    def optimizer_state_dict(self, optimizer: torch.optim.Optimizer) -> Mapping[str, Any]:
+        return self._copy_tree(optimizer.state_dict(), ("optimizer",))
+
+    @property
+    def allocated_bytes(self) -> int:
+        return sum(tensor.numel() * tensor.element_size() for tensor in self._tensor_buffers.values())
+
+    @property
+    def tensor_count(self) -> int:
+        return len(self._tensor_buffers)
 
 
 def random_state() -> dict[str, Any]:
@@ -39,13 +94,18 @@ def save_checkpoint(
     protocols: Mapping[str, Any],
     validation_loss: float,
     training_state: Mapping[str, Any] | None = None,
+    cpu_buffer: CpuCheckpointBuffer | None = None,
 ) -> None:
     """Atomically replace ``path`` only after a complete checkpoint is written."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
     payload: dict[str, Any] = {
-            "model": model.state_dict(),
+            "model": (
+                cpu_buffer.model_state_dict(model)
+                if cpu_buffer is not None
+                else model.state_dict()
+            ),
             "epoch": int(epoch),
             "config": dict(config),
             "protocols": dict(protocols),
@@ -54,7 +114,11 @@ def save_checkpoint(
             "training_state": dict(training_state or {}),
         }
     if optimizer is not None:
-        payload["optimizer"] = optimizer.state_dict()
+        payload["optimizer"] = (
+            cpu_buffer.optimizer_state_dict(optimizer)
+            if cpu_buffer is not None
+            else optimizer.state_dict()
+        )
     try:
         torch.save(payload, temporary_path)
         # torch.save(path) closes the completed temp file before the atomic replacement.

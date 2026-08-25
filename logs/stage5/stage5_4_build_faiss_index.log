@@ -1,1 +1,2 @@
 2026-08-24 20:11:07,460 | INFO | built FAISS ntotal=229456 device_for_export=cuda elapsed_seconds=8.26
+2026-08-25 23:30:22,014 | INFO | built FAISS ntotal=229456 device_for_export=cuda elapsed_seconds=6.86
