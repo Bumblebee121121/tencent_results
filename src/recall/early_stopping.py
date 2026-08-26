@@ -15,7 +15,7 @@ class EarlyStoppingDecision:
 
 
 class ValidationLossEarlyStopping:
-    """Track the absolute best loss and a separate meaningful-improvement baseline."""
+    """Track the absolute best loss and adjacent-epoch loss improvements."""
 
     def __init__(
         self,
@@ -24,7 +24,7 @@ class ValidationLossEarlyStopping:
         *,
         best_loss: float = float("inf"),
         best_epoch: int = 0,
-        reference_loss: float | None = None,
+        previous_loss: float | None = None,
         bad_epochs: int = 0,
     ) -> None:
         if patience < 1:
@@ -35,7 +35,7 @@ class ValidationLossEarlyStopping:
         self.min_delta = float(min_delta)
         self.best_loss = float(best_loss)
         self.best_epoch = int(best_epoch)
-        self.reference_loss = float(best_loss if reference_loss is None else reference_loss)
+        self.previous_loss = float(best_loss if previous_loss is None else previous_loss)
         self.bad_epochs = int(bad_epochs)
 
     def update(self, loss: float, epoch: int) -> EarlyStoppingDecision:
@@ -48,10 +48,13 @@ class ValidationLossEarlyStopping:
             self.best_loss = loss
             self.best_epoch = int(epoch)
 
-        improvement = self.reference_loss - loss
-        significant = loss < self.reference_loss and improvement >= self.min_delta
+        # Adjacent-epoch criterion: delta_t = L_(t-1) - L_t.  The previous
+        # loss advances after every epoch, rather than only after a significant
+        # improvement, so several sub-threshold decreases cannot accumulate.
+        improvement = self.previous_loss - loss
+        significant = loss < self.previous_loss and improvement >= self.min_delta
+        self.previous_loss = loss
         if significant:
-            self.reference_loss = loss
             self.bad_epochs = 0
         else:
             self.bad_epochs += 1
@@ -66,7 +69,7 @@ class ValidationLossEarlyStopping:
         return {
             "best_loss": self.best_loss,
             "best_epoch": self.best_epoch,
-            "reference_loss": self.reference_loss,
+            "previous_loss": self.previous_loss,
             "bad_epochs": self.bad_epochs,
             "patience": self.patience,
             "min_delta": self.min_delta,
@@ -88,6 +91,9 @@ class ValidationLossEarlyStopping:
             min_delta,
             best_loss=float(state.get("best_loss", checkpoint_loss)),
             best_epoch=int(state.get("best_epoch", checkpoint_epoch)),
-            reference_loss=float(state.get("reference_loss", checkpoint_loss)),
+            # Legacy checkpoints tracked a cumulative reference_loss.  It is
+            # intentionally not reused: the checkpoint validation loss is the
+            # immediately preceding epoch required by the adjacent criterion.
+            previous_loss=float(state.get("previous_loss", checkpoint_loss)),
             bad_epochs=int(state.get("bad_epochs", 0)),
         )

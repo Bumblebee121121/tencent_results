@@ -1,0 +1,96 @@
+data_root: data/TencentGR-1M
+stage3_root: artifacts/stage3
+stage4_root: artifacts/stage4
+stage5_root: artifacts/stage5
+output_root: artifacts/stage6
+log_root: logs/stage6
+
+stage3_protocol_version: click_target_prefix_v2
+stage4_protocol_version: stage4_train_only_features_v1
+stage5_recall_protocol_version: stage5_recall_baseline_v2
+stage6_protocol_version: stage6_eda_driven_recall_v1
+
+seed: 42
+scan_batch_size: 8192
+recall_ks: [10, 50, 100, 500]
+ndcg_ks: [10, 50, 100]
+
+retrieval:
+  exclude_history_items: false
+
+model:
+  embedding_dim: 64
+
+training:
+  random_negatives: 20
+  max_epochs: 12
+  batch_size: 512
+  sparse_learning_rate: 0.01
+  dense_learning_rate: 0.001
+  weight_decay: 0.0001
+  early_stopping_patience: 2
+  early_stopping_min_delta: 0.002
+  resume_checkpoint_interval: 3
+  num_workers: 0
+  pin_memory: false
+  validation_max_samples: null
+
+user_tower:
+  short_session:
+    # Formal runs must replace null after Validation-only selection in Stage 6.1.
+    session_gap_seconds: null
+    candidate_gap_seconds: [600, 1800, 3600]
+    max_events: null
+  long_history:
+    max_events: null
+  attention:
+    num_heads: 4
+    dropout: 0.1
+  action_embedding_dim: 64
+  time_feature_dim: 3
+  time_hidden_dim: 32
+
+item_tower:
+  side_fields:
+    ["100", "101", "102", "112", "114", "115", "116",
+     "117", "118", "119", "120", "121", "122"]
+  side_embedding_dim: 8
+  mm_input_dim: 32
+  mm_projection_dim: 64
+
+strength_gate:
+  force_unseen_id_weight_zero: true
+  monotonic_id_weight: true
+
+faiss:
+  index_type: hnsw_flat_ip
+  M: 32
+  efConstruction: 200
+  efSearch: 512
+  embedding_batch_size: 16384
+  query_batch_size: 2048
+
+hnsw_accuracy_audit:
+  split: validation_primary
+  sample_size: 1000
+  ks: [10, 50, 100, 500]
+  minimum_mean_recall:
+    10: 0.95
+    50: 0.95
+    100: 0.95
+    500: 0.90
+
+fusion:
+  method: rrf
+  rrf_c: 60
+  validation_weights: [0.0, 0.25, 0.5, 0.75, 1.0]
+
+debug:
+  max_train_samples: 10000
+  max_eval_samples: 1000
+  epochs: 1
+  session_gap_seconds: 1800
+  short_max_events: 32
+  long_max_events: 64
+  hnsw_audit_samples: 100
+

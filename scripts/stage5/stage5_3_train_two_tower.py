@@ -151,7 +151,7 @@ def build_training_manifest(
     resume_checkpoint_interval, stopper, debug, elapsed_seconds, status, phase_metrics,
 ) -> dict:
     return {
-        "stage": "5.3", "schema_version": 5,
+        "stage": "5.3", "schema_version": 6,
         "recall_protocol_version": config["recall_protocol_version"],
         "framework": "pytorch", "model": "VanillaTwoTower", "shared_item_embedding": True,
         "inputs": ["history_item_token", "target_or_negative_item_token"],
@@ -167,6 +167,8 @@ def build_training_manifest(
         "early_stopping": {
             "metric": "validation_loss", "mode": "min", "patience": patience,
             "min_delta": min_delta, "max_epochs": max_epochs,
+            "comparison": "adjacent_epoch",
+            "improvement": "previous_validation_loss - current_validation_loss",
             "stopped_early": stopped_early, "completed_epoch": completed_epoch,
         },
         "checkpoint_write_mode": "atomic_temp_then_replace",
@@ -294,7 +296,7 @@ def main() -> None:
             baseline_loss, baseline_count = run_epoch(model, baseline_loader, device)
             stopper = ValidationLossEarlyStopping(
                 patience, min_delta, best_loss=baseline_loss, best_epoch=checkpoint_epoch,
-                reference_loss=baseline_loss,
+                previous_loss=baseline_loss,
             )
             replace_resume_baseline(
                 history_rows, checkpoint_epoch, baseline_loss, baseline_count, validation_scope,
@@ -427,8 +429,8 @@ def main() -> None:
         if decision.should_stop:
             stopped_early = True
             logger.info(
-                "early stopping at epoch=%d: validation loss did not improve by at least %.6f "
-                "for %d consecutive epochs",
+                "early stopping at epoch=%d: adjacent-epoch validation loss did not improve "
+                "by at least %.6f for %d consecutive epochs",
                 epoch, min_delta, patience,
             )
             break

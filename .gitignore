@@ -36,3 +36,12 @@ artifacts/stage5_debug/**/*.npy
 artifacts/stage5_debug/**/*.pt
 artifacts/stage5_debug/**/*.index
 artifacts/stage5_test_tmp/
+
+# Stage 6 generated checkpoints, indexes, predictions and debug artifacts
+artifacts/stage6/**/*.parquet
+artifacts/stage6/**/*.npy
+artifacts/stage6/**/*.pt
+artifacts/stage6/**/*.index
+artifacts/stage6_debug/
+logs/stage6/
+logs/stage6_debug/

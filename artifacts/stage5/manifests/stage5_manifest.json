@@ -24,7 +24,7 @@
       "zero_user_vector_ratio": 0.00040197154904727346
     }
   },
-  "all_stage5_tests_passed": false,
+  "all_stage5_tests_passed": true,
   "outputs": {
     "itemcf_metrics": "artifacts\\stage5\\itemcf\\metrics.json",
     "two_tower_metrics": "artifacts\\stage5\\two_tower\\metrics.json",
@@ -33,5 +33,5 @@
     "repeated_target_audit": "artifacts\\stage5\\audits\\repeated_target_audit.json",
     "hnsw_accuracy_audit": "artifacts\\stage5\\audits\\hnsw_accuracy_audit.json"
   },
-  "elapsed_seconds": 0.799
+  "elapsed_seconds": 5.546
 }

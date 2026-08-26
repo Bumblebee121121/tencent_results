@@ -43,9 +43,34 @@ class ValidationLossEarlyStoppingTest(unittest.TestCase):
         self.assertFalse(decision.should_stop)
         self.assertEqual(stopper.bad_epochs, 0)
 
+    def test_sub_threshold_improvements_do_not_accumulate(self):
+        stopper = ValidationLossEarlyStopping(patience=2, min_delta=0.002)
+        stopper.update(2.0000, 1)
+        first_small = stopper.update(1.9989, 2)
+        second_small = stopper.update(1.9978, 3)
+
+        self.assertFalse(first_small.significant_improvement)
+        self.assertFalse(second_small.significant_improvement)
+        self.assertTrue(second_small.should_stop)
+        self.assertEqual(stopper.best_epoch, 3)
+
+    def test_resume_uses_saved_previous_epoch_loss(self):
+        original = ValidationLossEarlyStopping(patience=2, min_delta=0.002)
+        original.update(2.0000, 1)
+        original.update(1.9990, 2)
+        resumed = ValidationLossEarlyStopping.resume(
+            original.state_dict(), patience=2, min_delta=0.002,
+            checkpoint_loss=1.9990, checkpoint_epoch=2,
+        )
+        decision = resumed.update(1.9975, 3)
+
+        self.assertFalse(decision.significant_improvement)
+        self.assertTrue(decision.should_stop)
+
     def test_resume_uses_checkpoint_loss_for_legacy_checkpoint(self):
         stopper = ValidationLossEarlyStopping.resume(
-            None, patience=2, min_delta=0.002,
+            {"reference_loss": 2.100, "bad_epochs": 0},
+            patience=2, min_delta=0.002,
             checkpoint_loss=2.046, checkpoint_epoch=3,
         )
         decision = stopper.update(2.045, 4)
