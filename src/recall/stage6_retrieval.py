@@ -66,9 +66,13 @@ def _candidate_batches(paths, item_store, config, batch_size, include_unseen):
         raise ValueError("candidate Side/MM physical row alignment mismatch")
 
 
-def build_variant_index(variant, config, paths, debug, overwrite, device_name=None, checkpoint_label="best_loss"):
+def build_variant_index(
+    variant, config, paths, debug, overwrite, device_name=None,
+    checkpoint_label="best_loss", artifact_name=None,
+):
     started = time.perf_counter(); root = paths["output_root"]
-    variant_root = root / "indexes" / variant / checkpoint_label
+    owner = artifact_name or variant
+    variant_root = root / "indexes" / owner / checkpoint_label
     embedding_path = variant_root / "item_embeddings.npy"; candidate_path = variant_root / "indexed_candidates.parquet"
     index_path = variant_root / "faiss.index"; manifest_path = variant_root / "index_manifest.json"
     gate_path = root / "audits" / f"history_strength_gate_{checkpoint_label}.json" if variant == "E1" else None
@@ -76,7 +80,7 @@ def build_variant_index(variant, config, paths, debug, overwrite, device_name=No
     guard_outputs(outputs, overwrite)
     item_store = Stage6ItemStore(paths["stage4_root"], config["item_tower"]["side_fields"])
     model = build_model(variant, config, int(item_store.rid_to_token.size + 1), item_store.side_vocab_sizes)
-    checkpoint_path = root / "checkpoints" / variant / f"{checkpoint_label}.pt"
+    checkpoint_path = root / "checkpoints" / owner / f"{checkpoint_label}.pt"
     load_model_weights(checkpoint_path, model)
     device = select_device(device_name); model.to(device).eval()
     include_unseen = variant in {"I1", "I2", "I3", "E1"}
@@ -121,7 +125,8 @@ def build_variant_index(variant, config, paths, debug, overwrite, device_name=No
         gate_audit["unseen_gate_exactly_zero"] = all(value == 0.0 for value in gates_by_group["Unseen"])
         if not gate_audit["unseen_gate_exactly_zero"]: raise ValueError("E1 unseen ID gate is not zero")
         save_json(gate_audit,gate_path,overwrite)
-    manifest={"stage":"6.index","variant":variant,"checkpoint_label":checkpoint_label,"protocol_version":config["stage6_protocol_version"],
+    manifest={"stage":"6.index","variant":variant,"artifact_name":owner,
+              "checkpoint_label":checkpoint_label,"protocol_version":config["stage6_protocol_version"],
               "debug":debug,"all_eval_candidates_included":include_unseen,
               "full_eval_candidate_count":full_count,"excluded_train_unseen_candidate_count":full_count-count,
               "row_alignment":"dense FAISS row follows filtered physical candidate order; retrieval_id metadata only",
@@ -129,28 +134,37 @@ def build_variant_index(variant, config, paths, debug, overwrite, device_name=No
     save_json(manifest,manifest_path,overwrite); return manifest
 
 
-def evaluate_variant(variant, config, paths, debug, overwrite, device_name=None, checkpoint_label="best_loss", selection_candidate=False):
-    root=paths["output_root"]; variant_root=root/"indexes"/variant/checkpoint_label
+def evaluate_variant(
+    variant, config, paths, debug, overwrite, device_name=None,
+    checkpoint_label="best_loss", selection_candidate=False,
+    artifact_name=None, session_gap_override=None, include_test=True,
+):
+    root=paths["output_root"]; owner=artifact_name or variant
+    variant_root=root/"indexes"/owner/checkpoint_label
     if selection_candidate:
-        metrics_path=root/"metrics"/"checkpoint_candidates"/f"{variant}_{checkpoint_label}.json"
-        rank_paths={"validation":root/"predictions"/"checkpoint_candidates"/f"{variant}_{checkpoint_label}_validation.parquet"}
-        audit_path=root/"audits"/f"{variant.lower()}_{checkpoint_label}_hnsw_accuracy.json"
+        metrics_path=root/"metrics"/"checkpoint_candidates"/f"{owner}_{checkpoint_label}.json"
+        rank_paths={"validation":root/"predictions"/"checkpoint_candidates"/f"{owner}_{checkpoint_label}_validation.parquet"}
+        audit_path=root/"audits"/f"{owner.lower()}_{checkpoint_label}_hnsw_accuracy.json"
         split_files=(("validation","val_primary.parquet"),)
     else:
         metrics_path=root/"metrics"/f"{variant}.json"
-        rank_paths={split:root/"predictions"/f"{variant}_{split}.parquet" for split in ("validation","test")}
+        selected_splits=("validation","test") if include_test else ("validation",)
+        rank_paths={split:root/"predictions"/f"{variant}_{split}.parquet" for split in selected_splits}
         audit_path=root/"audits"/f"{variant.lower()}_hnsw_accuracy.json"
-        split_files=(("validation","val_primary.parquet"),("test","test_primary.parquet"))
+        split_files=tuple(
+            (split, "val_primary.parquet" if split == "validation" else "test_primary.parquet")
+            for split in selected_splits
+        )
     guard_outputs([metrics_path,*rank_paths.values(),audit_path],overwrite)
     store=FeatureStore(paths["stage4_root"]); item_store=Stage6ItemStore(paths["stage4_root"],config["item_tower"]["side_fields"])
     model=build_model(variant,config,int(store.rid_to_token.size+1),item_store.side_vocab_sizes)
-    load_model_weights(root/"checkpoints"/variant/f"{checkpoint_label}.pt",model); device=select_device(device_name); model.to(device).eval()
+    load_model_weights(root/"checkpoints"/owner/f"{checkpoint_label}.pt",model); device=select_device(device_name); model.to(device).eval()
     index=faiss.read_index(str(variant_root/"faiss.index")); index.hnsw.efSearch=int(config["faiss"]["efSearch"])
     indexed=ds.dataset(variant_root/"indexed_candidates.parquet",format="parquet").to_table(columns=["faiss_row","item_oid","item_rid"])
     rows=np.asarray(indexed.column("faiss_row").to_numpy(),dtype=np.int64)
     if not np.array_equal(rows,np.arange(len(rows))) or int(index.ntotal)!=len(rows): raise ValueError("FAISS candidate row misalignment")
     indexed_oids=np.asarray(indexed.column("item_oid").to_numpy(),dtype=np.int64)
-    time_stats=TimeNormalization.from_json(load_json(root/"audits"/"time_normalization.json")); gap,short_max,long_max=configured_session(config,debug)
+    time_stats=TimeNormalization.from_json(load_json(root/"audits"/"time_normalization.json")); gap,short_max,long_max=configured_session(config,debug,root,session_gap_override)
     maximum=int(config["debug"]["max_eval_samples"]) if debug else None; max_k=max(map(int,config["recall_ks"])); all_metrics={}; audit_queries=None
     for split,filename in split_files:
         dataset=Stage6ParquetDataset(paths["stage3_root"]/"samples"/filename,store,maximum,int(config["scan_batch_size"]))
@@ -183,7 +197,9 @@ def evaluate_variant(variant, config, paths, debug, overwrite, device_name=None,
     thresholds=config["hnsw_accuracy_audit"]["minimum_mean_recall"]; passed=all(audit_metrics[f"@{int(k)}"]["mean_recall"]>=float(thresholds[int(k)] if int(k) in thresholds else thresholds[str(k)]) for k in config["hnsw_accuracy_audit"]["ks"])
     save_json({"variant":variant,"validation_queries_only":True,"passed":passed,"metrics":audit_metrics},audit_path,overwrite)
     if not passed: raise ValueError("HNSW accuracy audit failed")
-    result={"stage":"6.evaluate","variant":variant,"checkpoint_label":checkpoint_label,
+    result={"stage":"6.evaluate","variant":variant,"artifact_name":owner,
+            "session_gap_seconds":gap,"checkpoint_label":checkpoint_label,
             "selection_candidate_validation_only":selection_candidate,"protocol_version":config["stage6_protocol_version"],"debug":debug,
+            "test_evaluated":bool("test" in all_metrics),
             "unseen_targets_remain_in_denominator":True,"hnsw_accuracy_passed":True,"metrics":all_metrics}
     save_json(result,metrics_path,overwrite); return result

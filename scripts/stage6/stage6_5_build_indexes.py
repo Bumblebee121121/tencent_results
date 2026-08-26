@@ -8,6 +8,8 @@ from src.recall.stage6_retrieval import build_variant_index
 from src.recall.stage6_runtime import add_common_arguments,load_config,require_contracts,stage6_paths
 def main():
  p=argparse.ArgumentParser(description=__doc__);add_common_arguments(p);p.add_argument("--variant",choices=["U1","U2","U3","I1","I2","I3","E1"]);p.add_argument("--checkpoint",choices=["best_loss","final"]);p.add_argument("--device");a=p.parse_args();c=load_config(a.config);paths=stage6_paths(c,a.debug);require_contracts(paths,c)
+ if not a.debug and a.variant is None:raise ValueError("Formal requires one explicit --variant")
+ if not a.debug and a.variant=="U1":raise ValueError("Formal U1 indexes are built by stage6_1b_select_session_gap.py")
  labels=[a.checkpoint] if a.checkpoint else (["best_loss"] if a.debug else ["best_loss","final"])
  for v in ([a.variant] if a.variant else ["U1","U2","U3","I1","I2","I3","E1"]):
   for label in labels:build_variant_index(v,c,paths,a.debug,a.overwrite,a.device,label)

@@ -93,14 +93,63 @@ def require_contracts(paths: Mapping[str, Path], config: Mapping[str, Any]) -> d
     return values
 
 
-def configured_session(config: Mapping[str, Any], debug: bool) -> tuple[int, int | None, int | None]:
+def session_gap_candidates(config: Mapping[str, Any]) -> tuple[int, ...]:
+    values = tuple(
+        int(value)
+        for value in config["user_tower"]["short_session"]["candidate_gap_seconds"]
+    )
+    if values != (600, 1800, 3600):
+        raise ValueError("Stage 6 session gap candidates must be exactly [600, 1800, 3600]")
+    return values
+
+
+def load_session_gap_selection(
+    output_root: Path, config: Mapping[str, Any]
+) -> dict[str, Any]:
+    path = Path(output_root) / "audits" / "session_gap_selection.json"
+    if not path.exists():
+        raise FileNotFoundError(
+            "formal run blocked: run stage6_1b_select_session_gap.py before training"
+        )
+    selection = load_json(path)
+    if selection.get("protocol_version") != config["stage6_protocol_version"]:
+        raise ValueError("session gap selection protocol mismatch")
+    if selection.get("selection_split") != "validation":
+        raise ValueError("session gap must be selected only on Validation")
+    if selection.get("selection_metric") != "Overall Recall@100":
+        raise ValueError("session gap selection metric must be Overall Recall@100")
+    if tuple(map(int, selection.get("candidate_gap_seconds", ()))) != session_gap_candidates(config):
+        raise ValueError("session gap selection candidate set mismatch")
+    if bool(selection.get("test_used_for_selection")):
+        raise ValueError("Test must not participate in session gap selection")
+    if not bool(selection.get("frozen")):
+        raise ValueError("session gap selection is not frozen")
+    selected = int(selection["selected_session_gap_seconds"])
+    if selected not in session_gap_candidates(config):
+        raise ValueError("selected session gap is outside the preregistered candidates")
+    return selection
+
+
+def configured_session(
+    config: Mapping[str, Any],
+    debug: bool,
+    output_root: Path | None = None,
+    gap_override: int | None = None,
+) -> tuple[int, int | None, int | None]:
     if debug:
         section = config["debug"]
-        return int(section["session_gap_seconds"]), int(section["short_max_events"]), int(section["long_max_events"])
+        gap = int(section["session_gap_seconds"] if gap_override is None else gap_override)
+        return gap, int(section["short_max_events"]), int(section["long_max_events"])
     short = config["user_tower"]["short_session"]
-    gap = short.get("session_gap_seconds")
-    if gap is None:
-        raise ValueError("formal run blocked: select session_gap_seconds on Validation and freeze configs/stage6.yaml")
+    if gap_override is not None:
+        gap = int(gap_override)
+        if gap not in session_gap_candidates(config):
+            raise ValueError("formal session gap override is outside [600, 1800, 3600]")
+    else:
+        if output_root is None:
+            raise ValueError("formal session resolution requires the Stage 6 output root")
+        selection = load_session_gap_selection(output_root, config)
+        gap = int(selection["selected_session_gap_seconds"])
     return int(gap), None if short.get("max_events") is None else int(short["max_events"]), None if config["user_tower"]["long_history"].get("max_events") is None else int(config["user_tower"]["long_history"]["max_events"])
 
 
@@ -135,6 +184,6 @@ def select_device(value: str | None):
 __all__ = [
     "PROJECT_ROOT", "DEFAULT_CONFIG", "add_common_arguments", "configured_session",
     "configure_logging", "guard_outputs", "load_config", "load_json", "require_contracts",
-    "require_paths", "save_csv", "save_json", "seed_everything", "select_device", "stage6_paths",
+    "load_session_gap_selection", "require_paths", "save_csv", "save_json", "seed_everything",
+    "select_device", "session_gap_candidates", "stage6_paths",
 ]
-

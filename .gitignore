@@ -43,5 +43,6 @@ artifacts/stage6/**/*.npy
 artifacts/stage6/**/*.pt
 artifacts/stage6/**/*.index
 artifacts/stage6_debug/
+artifacts/stage6_test_tmp/
 logs/stage6/
 logs/stage6_debug/

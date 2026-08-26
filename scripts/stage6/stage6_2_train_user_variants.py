@@ -10,6 +10,14 @@ from src.recall.stage6_workflow import train_variant
 def main():
     parser=argparse.ArgumentParser(description=__doc__); add_common_arguments(parser); parser.add_argument("--variant",choices=["U1","U2","U3"]); parser.add_argument("--device"); args=parser.parse_args()
     config=load_config(args.config); paths=stage6_paths(config,args.debug); require_contracts(paths,config)
-    for variant in ([args.variant] if args.variant else ["U1","U2","U3"]): train_variant(variant,config,paths,args.debug,args.overwrite,args.device)
+    if not args.debug:
+        if args.variant is None:
+            raise ValueError("Formal requires one explicit --variant; U1/U2/U3 cannot be trained in one bypassing call")
+        if args.variant == "U1":
+            raise ValueError("Formal U1 must be trained and selected by stage6_1b_select_session_gap.py")
+        variants = [args.variant]
+    else:
+        variants = [args.variant] if args.variant else ["U1","U2","U3"]
+    for variant in variants:
+        train_variant(variant,config,paths,args.debug,args.overwrite,args.device)
 if __name__=="__main__": main()
-

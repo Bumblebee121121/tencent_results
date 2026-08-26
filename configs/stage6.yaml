@@ -37,7 +37,8 @@ training:
 
 user_tower:
   short_session:
-    # Formal runs must replace null after Validation-only selection in Stage 6.1.
+    # Formal runs resolve the frozen value only from audits/session_gap_selection.json.
+    # A manually filled config value must not bypass Validation-only selection.
     session_gap_seconds: null
     candidate_gap_seconds: [600, 1800, 3600]
     max_events: null
@@ -93,4 +94,3 @@ debug:
   short_max_events: 32
   long_max_events: 64
   hnsw_audit_samples: 100
-
